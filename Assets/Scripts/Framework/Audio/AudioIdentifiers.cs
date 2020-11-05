@@ -16,6 +16,5 @@ namespace CoreFramework
         /// SFX
         ///
         public const string k_buttonPressed = "ButtonPressed";
-        public const string k_sfxButtonBack = "ButtonPressed";
     }
 }

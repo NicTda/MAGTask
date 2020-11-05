@@ -133,7 +133,7 @@ namespace CoreFramework
         /// @param callback
         ///     The function to call when the data is loaded
         /// 
-        public void LoadCachedData(Action<bool> callback)
+        public void LoadCachedData(Action callback = null)
         {
             m_coroutine = GlobalDirector.ExecuteCoroutine(LoadDataAsync(callback));
         }
@@ -225,15 +225,14 @@ namespace CoreFramework
         /// @param callback
         ///     The function to call when the data is loaded
         ///     
-        private IEnumerator LoadDataAsync(Action<bool> callback)
+        private IEnumerator LoadDataAsync(Action callback = null)
         {
-            bool loaded = true;
             foreach (var savable in m_savables)
             {
                 savable.Load();
                 yield return null;
             }
-            callback.SafeInvoke(loaded);
+            callback.SafeInvoke();
         }
 
         /// Saves registered objects data
