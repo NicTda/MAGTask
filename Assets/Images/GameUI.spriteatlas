@@ -1,0 +1,210 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GameUI
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 0dc2f15a08d3b504099ab1c7ce1a14c8, type: 3}
+    totalSpriteSurfaceArea: 1345506
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 6bed4780b0d05ae468823369eeaec514, type: 3}
+  - {fileID: 21300000, guid: 989ee590e5dbd5042a2e61633c6812ab, type: 3}
+  - {fileID: 21300000, guid: 286abe21dc47e764793710f26eeebcfb, type: 3}
+  - {fileID: 21300000, guid: edf7635151e8a5441b378b84e39ba1c3, type: 3}
+  - {fileID: 21300000, guid: 484fda514babeb644a45ddb158558a2c, type: 3}
+  - {fileID: 21300000, guid: 747f3a715affa05438abb0087815112c, type: 3}
+  - {fileID: 21300000, guid: 795cbc9196178ab46aeff924464120c2, type: 3}
+  - {fileID: 21300000, guid: 120f5002cea126a48834193f3731cdcd, type: 3}
+  - {fileID: 21300000, guid: 108ec202950fbfc4795c666386c1f0f5, type: 3}
+  - {fileID: 21300000, guid: 9dfd4252efb4fbf4999c9a187c74d04b, type: 3}
+  - {fileID: 21300000, guid: 1e3551c200b17b7438186dc09d3377cc, type: 3}
+  - {fileID: 21300000, guid: 74aa4ad278c7a1741a9fd8adea4abacc, type: 3}
+  - {fileID: 21300000, guid: e5e36cf27f1b16e44963f7aacf21158d, type: 3}
+  - {fileID: 21300000, guid: 5480cdf2891839a4190fde2adc183849, type: 3}
+  - {fileID: 21300000, guid: 7f707d73fc400eb479eb700d681b205a, type: 3}
+  - {fileID: 21300000, guid: dc56d7342edc0d4408078aed26ca6986, type: 3}
+  - {fileID: 21300000, guid: 80727c340eb3c7a4891b23274886375f, type: 3}
+  - {fileID: 21300000, guid: 77677a44aba3a444499e1012bda60357, type: 3}
+  - {fileID: 21300000, guid: 4ed31254e68673742be0b95725ebce34, type: 3}
+  - {fileID: 21300000, guid: 7be8cb54929e72e45affd4004a2d7368, type: 3}
+  - {fileID: 21300000, guid: 02d06864e250de749a0b33d5da1fc4d5, type: 3}
+  - {fileID: 21300000, guid: 2eb605c490585044b8acdac1eb866d12, type: 3}
+  - {fileID: 21300000, guid: b073f8154cf1d1e44a52673ce8c1c984, type: 3}
+  - {fileID: 21300000, guid: af5f6e157f34f824496ee022a000d882, type: 3}
+  - {fileID: 21300000, guid: ebfa9c45f8405004fba9fcf74337980f, type: 3}
+  - {fileID: 21300000, guid: dc876275ca642f144b7562d1f894a3ef, type: 3}
+  - {fileID: 21300000, guid: 33fcff75f39b33146a80f01d61b44b3d, type: 3}
+  - {fileID: 21300000, guid: a3ae3785f33cdda41b3c1ad601b4d6f5, type: 3}
+  - {fileID: 21300000, guid: 55c26295ab0a18f49bfcf02165307431, type: 3}
+  - {fileID: 21300000, guid: b1dba2c59d5fac94f843d38f8c681c95, type: 3}
+  - {fileID: 21300000, guid: 5b7f7d073e366a1489e77af896d9fa7b, type: 3}
+  - {fileID: 21300000, guid: 45700037897387d46a313b00f66784cf, type: 3}
+  - {fileID: 21300000, guid: dfdfcd7700b2e1842bc169a4d881dd1e, type: 3}
+  - {fileID: 21300000, guid: 7fbf6c080760f6a4e82af2c729cfadc1, type: 3}
+  - {fileID: 21300000, guid: 3e02796865ce8b84e84404e6c3d7ef04, type: 3}
+  - {fileID: 21300000, guid: e76198880f23f7c47be1176e9d7d6487, type: 3}
+  - {fileID: 21300000, guid: 476f31b815c49e74f900e1a6784c455e, type: 3}
+  - {fileID: 21300000, guid: 6e9ab5f8afc94604ea65005a4421ec56, type: 3}
+  - {fileID: 21300000, guid: 5d8f27f87dc02084e92a314665e1f0fa, type: 3}
+  - {fileID: 21300000, guid: c8995f3933c55e24480675b40aac2dee, type: 3}
+  - {fileID: 21300000, guid: df9a1b5950e90cb4c8a91dd852e0aa43, type: 3}
+  - {fileID: 21300000, guid: 1a542d59e3105684da736d513735903f, type: 3}
+  - {fileID: 21300000, guid: 70d7cfb9e1b0c2046b81c201c72ce6b5, type: 3}
+  - {fileID: 21300000, guid: bec944c934756e54d82957017d7ecaae, type: 3}
+  - {fileID: 21300000, guid: 8ca1e83a32598944f9fbf7ce6b9d2dd5, type: 3}
+  - {fileID: 21300000, guid: 2ce13c3afbdd34945a68409d66a6cabb, type: 3}
+  - {fileID: 21300000, guid: 92534d4afb09ae644a610c0cddb8de67, type: 3}
+  - {fileID: 21300000, guid: bc72365aaf41ea248a02a56c5cfaaaa0, type: 3}
+  - {fileID: 21300000, guid: d53c7faaf0bc3874dbdbbdf1b51c65b3, type: 3}
+  - {fileID: 21300000, guid: 71f82cca43e78814f8cc84a51a0e2ad3, type: 3}
+  - {fileID: 21300000, guid: 4b2fddeabf406ca45934586476835a55, type: 3}
+  - {fileID: 21300000, guid: bb63184b202117349838e9baf835cc29, type: 3}
+  - {fileID: 21300000, guid: 8ec7619b7addbcd45811e5630898dc71, type: 3}
+  - {fileID: 21300000, guid: f77bdedb28c2f9747896d84e70695b19, type: 3}
+  - {fileID: 21300000, guid: df6f8aebda5850244a747480259bef31, type: 3}
+  - {fileID: 21300000, guid: 5fadceebbfc4f7c4fb5c9146522238f2, type: 3}
+  - {fileID: 21300000, guid: 1e11713ceb07d38439b2db67c9da8225, type: 3}
+  - {fileID: 21300000, guid: e08862fc75aff4f48ad1f554e90a3f31, type: 3}
+  - {fileID: 21300000, guid: 7150f4fc9a7c37b468f1695b9225514f, type: 3}
+  - {fileID: 21300000, guid: 338f0e0df0b53e345a1262149503cebe, type: 3}
+  - {fileID: 21300000, guid: 9d25953dd3d1eb64baf55226b4b6dae0, type: 3}
+  - {fileID: 21300000, guid: 09de2d4d4f2b23842981a0aa5069ddc7, type: 3}
+  - {fileID: 21300000, guid: 7d243d5dbd90b5443bc6fab015c85cc6, type: 3}
+  - {fileID: 21300000, guid: b4d47b7d99d0a2d4689dc92e7e10d102, type: 3}
+  - {fileID: 21300000, guid: 5b29ac7d64013be438521f7bb87d41f2, type: 3}
+  - {fileID: 21300000, guid: 0ef0719db816eb9458931b8bf92603a6, type: 3}
+  - {fileID: 21300000, guid: d1854badaee731845a38f7b11bb8ae10, type: 3}
+  - {fileID: 21300000, guid: 78db3cbdb8dfffe4d9cc11636d00b8d9, type: 3}
+  - {fileID: 21300000, guid: f9e32ccd2d1cd13419ba6257004803aa, type: 3}
+  - {fileID: 21300000, guid: 5cd7b5ed0ab078b42948d64a2986a29f, type: 3}
+  - {fileID: 21300000, guid: e29136fd7f8a1c7499bfa0d77f260645, type: 3}
+  - {fileID: 21300000, guid: 36ab501e06099bb42b51b5c5974ab0e2, type: 3}
+  - {fileID: 21300000, guid: 5133f33eca6f34a4c800c6eb7b4f4153, type: 3}
+  - {fileID: 21300000, guid: d12e856e140ac1f419bae61278909936, type: 3}
+  - {fileID: 21300000, guid: 0b7ef86e395f06549bfc1198af9c803b, type: 3}
+  - {fileID: 21300000, guid: e041b48e0be6ac74398287c5f7d154d8, type: 3}
+  - {fileID: 21300000, guid: 7f49c69e9da170b40a0d6d785b4479e8, type: 3}
+  - {fileID: 21300000, guid: 1ed711ee4e5d21a499b2ba287401b8de, type: 3}
+  - {fileID: 21300000, guid: a5c4de2f1d728164f91b8cf5b5bb3b6c, type: 3}
+  - {fileID: 21300000, guid: 278ca94ff71b70d4f9fa03793893513c, type: 3}
+  - {fileID: 21300000, guid: 9bcc4f4fdcc3cd946bf2f24af81637ab, type: 3}
+  - {fileID: 21300000, guid: 02c3747fba0916f4e8cc403dcd46672a, type: 3}
+  - {fileID: 21300000, guid: a2f7baaf93bec5044a82d6ae13bab7d8, type: 3}
+  - {fileID: 21300000, guid: d74c9bef11b153440a9b4cd0253b7139, type: 3}
+  - {fileID: 21300000, guid: f896d8ff1bae67046a84a555e200744d, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - PanelTinyPink
+  - PanelPink
+  - IconAvatar
+  - IconQuit
+  - PanelBar
+  - PanelHudPlain
+  - DoorLabelBase
+  - IconUpgrade
+  - PanelBarSemi
+  - PanelGrey
+  - PanelDeco6
+  - PanelHudPink
+  - IconAchievements
+  - PanelDeco1
+  - PanelDeco2
+  - PanelGreen
+  - PanelHudBottom
+  - IconSFXOn
+  - IconSettings
+  - PanelTinyYellow
+  - IconBack2
+  - IconBackBlue
+  - IconAdd
+  - Z
+  - IconPrivacy
+  - PanelHudPlain2
+  - IconSupport
+  - IconShop
+  - IconProfile
+  - PanelDeco5
+  - PanelHole
+  - IconGameCenter
+  - IconBackingBlue
+  - PanelBarYellow
+  - IconBack
+  - IconBackingPurple
+  - PanelHudGreen
+  - Exclamation
+  - IconBackingPink
+  - IconTick
+  - IconNavigate
+  - IconQuests
+  - IconOptions
+  - IconBaby
+  - IconTimer
+  - OfferSash
+  - PanelTinyBlue
+  - IconGlow
+  - PanelBlue
+  - PanelBarRed
+  - PanelYellow
+  - PanelBarGreen
+  - IconLock
+  - PanelHudPlain_Flash
+  - IconStore
+  - IconCross
+  - IconMusicOn
+  - PanelHudDeep
+  - PanelPurple
+  - IconPiggybank
+  - PanelHudYellow
+  - IconBackingGreen
+  - IconInventory
+  - PanelHeart
+  - PanelDetail
+  - Loading
+  - IconGoogle
+  - IconMusicOff
+  - PanelIndent
+  - PanelTinyGreen
+  - IconFB
+  - IconCounter
+  - IconCoinsafe
+  - OfferIcon
+  - IconSFXOff
+  - IconGames
+  - IconHeart
+  - PanelBarBlue
+  - PanelTinyRed
+  - PanelHudRed
+  - stars
+  - PanelRed
+  - PanelTinyGrey
+  - IconRate
+  - IconWatch
+  m_Tag: GameUI
+  m_IsVariant: 0
