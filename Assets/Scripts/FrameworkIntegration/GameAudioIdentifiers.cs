@@ -10,8 +10,8 @@ namespace CoreFramework
     {
         /// Musics
         ///
-        public const string k_musicMain = "theme_main";
-        public const string k_musicLevel = "theme_level";
+        public const string k_musicMain = "POL-puzzle-kid-short";
+        public const string k_musicLevel = "POL-castle-rooms-short";
 
         /// SFX
         ///

@@ -7,14 +7,14 @@ using UnityEngine;
 
 namespace MAGTask
 {
-    /// Local director for the Startup scene
+    /// Local director for the Main scene
     /// 
-    public sealed class StartupLocalDirector : LocalDirector
+    public sealed class MainLocalDirector : LocalDirector
     {
         [SerializeField]
-        private StartupView m_view = null;
+        private MainView m_view = null;
 
-        #region StartupLocalDirector functions
+        #region LocalDirector functions
         /// Entry point for the initialised state
         /// 
         protected override void StartInitialisedState()
@@ -23,7 +23,7 @@ namespace MAGTask
             Application.targetFrameRate = 60;
 
             // Kickstart the game's logic
-            new StartupController(this, m_view);
+            new MainController(this, m_view);
         }
         #endregion
     }
