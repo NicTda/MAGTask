@@ -30,6 +30,7 @@ namespace MAGTask
         private const string k_stateLose = "Lose";
 
         private const int k_minActiveTiles = 3;
+        private const float k_distanceTiles = 2;
 
         private LevelView m_view = null;
 
@@ -87,7 +88,7 @@ namespace MAGTask
             m_selectedTiles.Capacity = m_levelData.m_height * m_levelData.m_width;
 
             // Create the level
-            m_coroutine = GlobalDirector.ExecuteCoroutine(CreateLevel( () =>
+            m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerLevelCreation(() =>
             {
                 // We're done loading
                 m_fsm.ExecuteAction(k_actionNext);
@@ -97,7 +98,7 @@ namespace MAGTask
         /// @param callback
         ///     The function to call when the level is created
         ///     
-        private IEnumerator CreateLevel(Action callback)
+        private IEnumerator StaggerLevelCreation(Action callback)
         {
             // TODO TDA: eventually, allow irregular boards, taken from data
             // Create the board, populate tiles
@@ -191,19 +192,44 @@ namespace MAGTask
         private void EnterStateResolve()
         {
             // Pop the tiles
-            foreach(var tile in m_selectedTiles)
+            m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerTilesPop(() =>
+            {
+                // Add new tiles
+                foreach (var tile in m_selectedTiles)
+                {
+                    // TODO TDA: add the tiles
+                    tile.Appear();
+                }
+                m_selectedTiles.Clear();
+
+                // TODO TDA: Check objectives
+                m_fsm.ExecuteAction(k_actionIdle);
+            }));
+        }
+
+        /// @param callback
+        ///     The function to call when the level is created
+        ///     
+        private IEnumerator StaggerTilesPop(Action callback)
+        {
+            // Pop the tiles
+            int popped = 0;
+            foreach (var tile in m_selectedTiles)
             {
                 // TODO TDA: Add score
-                tile.Pop();
+                // TODO TDA: Particles
+                tile.Pop(() =>
+                {
+                    ++popped;
+                });
+                yield return null;
             }
 
-            // Add new tiles
-            m_selectedTiles.Clear();
-
-            // Check objectives
+            while(popped < m_selectedTiles.Count)
             {
-                m_fsm.ExecuteAction(k_actionIdle);
+                yield return null;
             }
+            callback.SafeInvoke();
         }
 
         /// End of the Resolve state
@@ -275,10 +301,14 @@ namespace MAGTask
         {
             if(m_interacting == true)
             {
-                if(m_selectedTiles.Contains(tile) == true)
+                if (m_selectedTiles.Count == 0)
                 {
-                    // Check if we should cancel a tile
-                    // TODO TDA: either cut the trailing tiles (hard cancel)
+                    // Add the first tile to the selected list
+                    SelectTile(tile);
+                }
+                else if(m_selectedTiles.Contains(tile) == true)
+                {
+                    /*/ Cut the trailing tiles (hard cancel)
                     for(int index = m_selectedTiles.Count - 1; index >=0; --index)
                     {
                         if(m_selectedTiles[index] == tile)
@@ -288,20 +318,32 @@ namespace MAGTask
 
                         m_selectedTiles[index].Deselect();
                         m_selectedTiles.RemoveAt(index);
-                    }
+                    }*/
 
-                    // TODO TDA: or only cut the last tile if the entered tile is n-1 (soft cancel)
-                }
-                else if (m_selectedTiles.Count == 0)
-                {
-                    // Add the first tile to the selected list
-                    SelectTile(tile);
+                    // Check if we should cancel a tile
+                    if (m_selectedTiles.Count > 1)
+                    {
+                        // Cut the last tile if the entered tile is n-1 (soft cancel)
+                        var backTile = m_selectedTiles[m_selectedTiles.Count - 2];
+                        if(backTile == tile)
+                        {
+                            var lastIndex = m_selectedTiles.Count - 1;
+                            m_selectedTiles[lastIndex].Deselect();
+                            m_selectedTiles.RemoveAt(lastIndex);
+                        }
+                    }
                 }
                 else
                 {
                     // TODO TDA: Check if the tile type is valid (for now, the same)
-                    // TODO TDA: Check if they are neighbours
-                    SelectTile(tile);
+
+                    // Check if they are neighbours
+                    var lastTile = m_selectedTiles.GetLast();
+                    var distance = (lastTile.transform.position - tile.transform.position).sqrMagnitude;
+                    if(distance <= k_distanceTiles)
+                    {
+                        SelectTile(tile);
+                    }
                 }
             }
         }

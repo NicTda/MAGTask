@@ -40,13 +40,13 @@ namespace MAGTask
             m_animator.Play(k_animAppear);
         }
 
-        /// Called when the tile should pop
+        /// @param callback
+        ///     The function to call when the animation is finished
         /// 
-        public void Pop()
+        public void Pop(Action callback = null)
         {
-            // TODO TDA: Particles
-            m_animator.Play(k_animPop);
             m_selected.SafeSetActive(false);
+            m_animator.PlayAnimation(k_animPop, callback);
         }
 
         /// Called when the tile is selected
