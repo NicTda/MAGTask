@@ -4,6 +4,7 @@
 
 using CoreFramework;
 using System;
+using UnityEngine;
 
 namespace MAGTask
 {
@@ -11,14 +12,27 @@ namespace MAGTask
     ///
     public sealed class LevelView : SceneFSMView
     {
-        public event Action OnPlayRequested;
+        public event Action OnInteractStarted;
+        public event Action OnInteractEnded;
+
+        public Transform TilesHolder { get { return m_tilesHolder; } }
+
+        [SerializeField]
+        private Transform m_tilesHolder = null;
 
         #region Public functions
-        /// Called when the player presses the Play button
+        /// Called when the player starts interacting with the board
         /// 
-        public void OnPlayPressed()
+        public void OnInteractStart()
         {
-            OnPlayRequested.SafeInvoke();
+            OnInteractStarted.SafeInvoke();
+        }
+
+        /// Called when the player ends interacting with the board
+        /// 
+        public void OnInteractEnd()
+        {
+            OnInteractEnded.SafeInvoke();
         }
         #endregion
     }

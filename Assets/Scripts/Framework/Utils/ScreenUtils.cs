@@ -18,8 +18,6 @@ namespace CoreFramework
         public readonly static Rect k_rect = new Rect(0f, 0f, Screen.width, Screen.height);
 #endif
 
-        private const float k_CMToInch = 2.54f;
-
         /// @return The current screen's aspect ratio
         /// 
         public static float GetAspectRatio()
@@ -32,26 +30,6 @@ namespace CoreFramework
         public static ScreenOrientation GetOrientation()
         {
             return (Screen.width >= Screen.height) ? ScreenOrientation.Landscape : ScreenOrientation.Portrait;
-        }
-
-        /// @param length
-        ///     The length in centimeters to convert to pixels
-        /// 
-        /// @return the input length in pixels for the current screen
-        /// 
-        public static float CentimetersToPixels(float length)
-        {
-            return (length * Screen.dpi / k_CMToInch);
-        }
-
-        /// @param length
-        ///     The length in pixels to convert to centimerers
-        /// 
-        /// @return the input length in centimeters for the current screen
-        /// 
-        public static float PixelsToCentimerers(float length)
-        {
-            return (length / Screen.dpi * k_CMToInch);
         }
     }
 }

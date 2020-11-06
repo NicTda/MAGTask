@@ -57,6 +57,7 @@ namespace MAGTask
             // Metadata
             m_metadataService = m_serviceSupplier.GetService<MetadataService>();
             m_metadataService.SetDefaultLoader(typeof(LocalisedTextData), typeof(LocalisedTextLoader));
+            m_metadataService.SetDefaultLoader(typeof(LevelData), typeof(LevelDataLoader));
 
             // Localisation
             m_localisationService = m_serviceSupplier.RegisterService<LocalisationService>();
