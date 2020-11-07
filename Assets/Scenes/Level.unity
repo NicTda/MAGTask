@@ -878,6 +878,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fsmAnimator: {fileID: 1160828100}
   m_tilesHolder: {fileID: 2044575707}
+  m_scoreText: {fileID: 890021447}
 --- !u!4 &1160828102
 Transform:
   m_ObjectHideFlags: 0

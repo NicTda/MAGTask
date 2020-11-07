@@ -139,7 +139,10 @@ namespace MAGTask
             // Create the tile view at the top of the board
             var spawnPosition = boardPosition;
             spawnPosition.y = m_spawnHeight;
-            var tileView = m_tileFactory.CreateTile(m_view.TilesHolder, spawnPosition);
+
+            // Choose a random tile colour
+            TileColour randomColour = (TileColour)m_levelData.m_tiles.GetRandom();
+            var tileView = m_tileFactory.CreateTile(randomColour, m_view.TilesHolder, spawnPosition);
             tileView.m_boardPosition = boardPosition;
             return tileView;
         }
@@ -207,15 +210,33 @@ namespace MAGTask
             m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerTilesPop(() =>
             {
                 // Add new tiles
-                foreach (var tile in m_selectedTiles)
+                var tilesToAdd = new List<TileView>(m_selectedTiles.Count);
+                foreach (var poppedTile in m_selectedTiles)
                 {
-                    // TODO TDA: move the tiles above it
+                    // Get all tiles above the popped one
+                    var newSpawnPosition = poppedTile.m_boardPosition;
+                    var tilesAbove = m_tiles.FindAll((tile) => tile.m_boardPosition.x == newSpawnPosition.x && tile.transform.position.y > newSpawnPosition.y);
+                    foreach(var tileAbove in tilesAbove)
+                    {
+                        // Move them down one unit
+                        tileAbove.m_boardPosition.y -= 1.0f;
+                        tileAbove.Reposition();
+
+                        // The new spawn should spawn higher than the popped tile
+                        newSpawnPosition.y += 1.0f;
+                    }
+
                     // Spawn the new tile to replace this one
-                    var tileView = SpawnNewTile(tile.m_boardPosition);
-                    m_tiles.Add(tileView);
+                    var tileView = SpawnNewTile(newSpawnPosition);
+                    tilesToAdd.Add(tileView);
                     tileView.Appear();
+
+                    // For now, destroy game objects
+                    MonoBehaviour.Destroy(poppedTile.gameObject);
                 }
+
                 m_selectedTiles.Clear();
+                m_tiles.AddRange(tilesToAdd);
 
                 // TODO TDA: Check objectives
                 m_fsm.ExecuteAction(k_actionIdle);
@@ -238,10 +259,7 @@ namespace MAGTask
                 {
                     // Tile popped, remove it
                     m_tiles.Remove(tile);
-
-                    // TODO TDA: Pool the objects
-                    // For now, destroy / recreate game objects
-                    MonoBehaviour.Destroy(tile.gameObject);
+                    tile.gameObject.SetActive(false);
                     ++popped;
                 });
                 yield return null;
@@ -334,27 +352,11 @@ namespace MAGTask
                     var lastTile = m_selectedTiles[lastIndex];
                     if (m_selectedTiles.Contains(tile) == true)
                     {
-                        /*/ Cut the trailing tiles (hard cancel)
-                        for(int index = m_selectedTiles.Count - 1; index >=0; --index)
+                        // Cut the last tile if the entered tile is n-1 (soft cancel)
+                        if (m_selectedTiles.Count > 1 && tile == m_selectedTiles[lastIndex - 1])
                         {
-                            if(m_selectedTiles[index] == tile)
-                            {
-                                break;
-                            }
-
-                            m_selectedTiles[index].Deselect();
-                            m_selectedTiles.RemoveAt(index);
-                        }*/
-
-                        // Check if we should cancel a tile
-                        if (m_selectedTiles.Count > 1)
-                        {
-                            // Cut the last tile if the entered tile is n-1 (soft cancel)
-                            if (tile == m_selectedTiles[lastIndex - 1])
-                            {
-                                m_selectedTiles[lastIndex].Deselect();
-                                m_selectedTiles.RemoveAt(lastIndex);
-                            }
+                            lastTile.Deselect();
+                            m_selectedTiles.RemoveAt(lastIndex);
                         }
                     }
                     else if(tile.m_tileColour == lastTile.m_tileColour)

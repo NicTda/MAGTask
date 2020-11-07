@@ -29,6 +29,8 @@ namespace MAGTask
         private Transform m_itemHolder = null;
         [SerializeField]
         private TouchComponent m_touchComponent = null;
+        [SerializeField]
+        private float m_timeToDrop = 1.0f;
 
         private Tweener m_tweenPosition = null;
 
@@ -44,8 +46,19 @@ namespace MAGTask
         /// 
         public void Appear()
         {
-            m_tileItem?.Appear();
-            m_tweenPosition = transform.DOMove(m_boardPosition, 1.0f);
+            m_tileItem.Appear();
+            Reposition();
+        }
+
+        /// Called when the tile should reposition itself
+        /// 
+        public void Reposition()
+        {
+            m_tweenPosition.Stop();
+            m_tweenPosition = transform.DOMove(m_boardPosition, m_timeToDrop).SetEase(Ease.OutBack).OnComplete(() =>
+            {
+                m_tileItem.Bounce();
+            });
         }
 
         /// @param callback
@@ -53,21 +66,21 @@ namespace MAGTask
         /// 
         public void Pop(Action callback = null)
         {
-            m_tileItem?.Pop(callback);
+            m_tileItem.Pop(callback);
         }
 
         /// Called when the tile is selected
         /// 
         public void Select()
         {
-            m_tileItem?.Select();
+            m_tileItem.Select();
         }
 
         /// Called when the tile is deselected
         /// 
         public void Deselect()
         {
-            m_tileItem?.Deselect();
+            m_tileItem.Deselect();
         }
 
         /// Called when a touch enters the tile

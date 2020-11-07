@@ -41,9 +41,16 @@ namespace MAGTask
 
         /// Called when the tile is selected
         /// 
-        public void Select()
+        public void Bounce()
         {
             m_animator.Play(k_animBounce);
+        }
+
+        /// Called when the tile is selected
+        /// 
+        public void Select()
+        {
+            Bounce();
             m_selected.SafeSetActive(true);
         }
 
@@ -51,7 +58,7 @@ namespace MAGTask
         /// 
         public void Deselect()
         {
-            m_animator.Play(k_animBounce);
+            Bounce();
             m_selected.SafeSetActive(false);
         }
         #endregion

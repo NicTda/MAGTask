@@ -33,7 +33,11 @@ namespace MAGTask
         public TileView CreateTile(Transform parent, Vector3 position)
         {
             // Random colour
-            TileColour colour = RandomUtils.IsRandomSuccess(0.5f) ? TileColour.Blue : TileColour.Yellow;
+            TileColour colour = TileColour.None;
+            while(colour == TileColour.None)
+            {
+                colour = RandomUtils.RandomEnum<TileColour>();
+            }
             return CreateTile(colour, parent, position);
         }
 
