@@ -53,18 +53,18 @@ SpriteAtlas:
   m_PackedSpriteNamesToIndex:
   - Face6
   - Shadow
-  - Jelly5
-  - Jelly1
+  - JellyPink
+  - JellyYellow
   - Face2
   - Face0
   - Slot0
   - Face4
-  - Jelly3
+  - JellyRed
   - Face3
-  - Jelly2
+  - JellyGreen
   - Slot1
-  - Jelly0
+  - JellyGrey
   - Face1
-  - Jelly4
+  - JellyBlue
   m_Tag: Tiles
   m_IsVariant: 0

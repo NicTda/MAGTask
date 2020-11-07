@@ -16,28 +16,36 @@ namespace MAGTask
         public Action<TileView> OnTouchEnter;
         public Action<TileView> OnTouchExit;
 
-        private const string k_animAppear = "Appear";
-        private const string k_animBounce = "Bounce";
-        private const string k_animPop = "Pop";
-        private const string k_animSelected = "Selected";
+        public Transform TileItemHolder {  get { return m_itemHolder; } }
 
-        public int m_index = 0;
+        [HideInInspector]
+        public Vector3 m_boardPosition = Vector3.zero;
+        [HideInInspector]
+        public TileItemView m_tileItem = null;
+        [HideInInspector]
+        public TileColour m_tileColour = TileColour.None;
 
         [SerializeField]
-        private Animator m_animator = null;
+        private Transform m_itemHolder = null;
         [SerializeField]
         private TouchComponent m_touchComponent = null;
-        [SerializeField]
-        private GameObject m_selected = null;
 
-        Tweener m_tweenPosition = null;
+        private Tweener m_tweenPosition = null;
 
         #region Public functions
+        /// OnDestroy function
+        /// 
+        public void OnDestroy()
+        {
+            m_tweenPosition.Stop();
+        }
+
         /// Called when the tile should appear
         /// 
         public void Appear()
         {
-            m_animator.Play(k_animAppear);
+            m_tileItem?.Appear();
+            m_tweenPosition = transform.DOMove(m_boardPosition, 1.0f);
         }
 
         /// @param callback
@@ -45,30 +53,21 @@ namespace MAGTask
         /// 
         public void Pop(Action callback = null)
         {
-            m_selected.SafeSetActive(false);
-            m_animator.PlayAnimation(k_animPop, callback);
+            m_tileItem?.Pop(callback);
         }
 
         /// Called when the tile is selected
         /// 
         public void Select()
         {
-            m_animator.Play(k_animBounce);
-            m_selected.SafeSetActive(true);
+            m_tileItem?.Select();
         }
 
         /// Called when the tile is deselected
         /// 
         public void Deselect()
         {
-            m_animator.Play(k_animBounce);
-            m_selected.SafeSetActive(false);
-        }
-
-        /// Called when the player taps the tile
-        /// 
-        public void OnTapped()
-        {
+            m_tileItem?.Deselect();
         }
 
         /// Called when a touch enters the tile

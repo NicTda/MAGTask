@@ -3,6 +3,7 @@
 //
 
 using CoreFramework;
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +15,6 @@ namespace MAGTask
     /// 
     public sealed class LevelController : SceneFSMController
     {
-        private const string k_slotPrefab = "Prefabs/Tiles/TileSlot";
         private const string k_slotName = "Slot{0}";
 
         private const string k_actionNext = "Next";
@@ -35,11 +35,13 @@ namespace MAGTask
         private LevelView m_view = null;
 
         private LevelDataLoader m_levelLoader = null;
+        private TileFactory m_tileFactory = null;
         private LevelData m_levelData = null;
 
         private List<TileView> m_tiles = new List<TileView>();
         private List<TileView> m_selectedTiles = new List<TileView>();
         private Coroutine m_coroutine = null;
+        private float m_spawnHeight = 0.0f;
         private bool m_interacting = false;
 
         #region Public functions
@@ -56,6 +58,7 @@ namespace MAGTask
             m_view = view;
 
             m_levelLoader = GlobalDirector.Service<MetadataService>().GetLoader<LevelData>() as LevelDataLoader;
+            m_tileFactory = localDirector.GetFactory<TileFactory>();
 
             m_audioService.PlayMusicFadeCross(AudioIdentifiers.k_musicLevel);
 
@@ -86,6 +89,7 @@ namespace MAGTask
             m_levelData = m_levelLoader.GetItem("Level0");
             m_tiles.Capacity = m_levelData.m_height * m_levelData.m_width;
             m_selectedTiles.Capacity = m_levelData.m_height * m_levelData.m_width;
+            m_spawnHeight = m_levelData.m_height * 0.5f + 1.0f;
 
             // Create the level
             m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerLevelCreation(() =>
@@ -102,24 +106,19 @@ namespace MAGTask
         {
             // TODO TDA: eventually, allow irregular boards, taken from data
             // Create the board, populate tiles
-            int index = 0;
-            Vector3 position = new Vector3(0.0f, m_levelData.m_height * 0.5f - 0.5f);
+            Vector3 boardPosition = new Vector3(0.0f, m_levelData.m_height * 0.5f - 0.5f);
             for (int row = 0; row < m_levelData.m_height; ++row)
             {
-                position.x = -m_levelData.m_width * 0.5f + 0.5f;
+                boardPosition.x = -m_levelData.m_width * 0.5f + 0.5f;
                 for (int col = 0; col < m_levelData.m_width; ++col)
                 {
                     // Create the tile view
-                    var tileObject = ResourceUtils.LoadAndInstantiateGameObject(k_slotPrefab, m_view.TilesHolder, string.Format(k_slotName, index));
-                    tileObject.transform.position = position;
-                    var tileView = tileObject.GetComponent<TileView>();
-                    tileView.m_index = index;
+                    var tileView = SpawnNewTile(boardPosition);
                     m_tiles.Add(tileView);
 
-                    position.x += 1.0f;
-                    ++index;
+                    boardPosition.x += 1.0f;
                 }
-                position.y -= 1.0f;
+                boardPosition.y -= 1.0f;
             }
 
             // Stagger the appear animations
@@ -130,6 +129,19 @@ namespace MAGTask
             }
 
             callback.SafeInvoke();
+        }
+
+        /// @param boardPosition
+        ///     The position the tile occupies on the board
+        ///     
+        private TileView SpawnNewTile(Vector3 boardPosition)
+        {
+            // Create the tile view at the top of the board
+            var spawnPosition = boardPosition;
+            spawnPosition.y = m_spawnHeight;
+            var tileView = m_tileFactory.CreateTile(m_view.TilesHolder, spawnPosition);
+            tileView.m_boardPosition = boardPosition;
+            return tileView;
         }
 
         /// End of the Load state
@@ -197,8 +209,11 @@ namespace MAGTask
                 // Add new tiles
                 foreach (var tile in m_selectedTiles)
                 {
-                    // TODO TDA: add the tiles
-                    tile.Appear();
+                    // TODO TDA: move the tiles above it
+                    // Spawn the new tile to replace this one
+                    var tileView = SpawnNewTile(tile.m_boardPosition);
+                    m_tiles.Add(tileView);
+                    tileView.Appear();
                 }
                 m_selectedTiles.Clear();
 
@@ -216,10 +231,17 @@ namespace MAGTask
             int popped = 0;
             foreach (var tile in m_selectedTiles)
             {
+                // TODO TDA: Add SFX
                 // TODO TDA: Add score
                 // TODO TDA: Particles
                 tile.Pop(() =>
                 {
+                    // Tile popped, remove it
+                    m_tiles.Remove(tile);
+
+                    // TODO TDA: Pool the objects
+                    // For now, destroy / recreate game objects
+                    MonoBehaviour.Destroy(tile.gameObject);
                     ++popped;
                 });
                 yield return null;
@@ -306,43 +328,43 @@ namespace MAGTask
                     // Add the first tile to the selected list
                     SelectTile(tile);
                 }
-                else if(m_selectedTiles.Contains(tile) == true)
-                {
-                    /*/ Cut the trailing tiles (hard cancel)
-                    for(int index = m_selectedTiles.Count - 1; index >=0; --index)
-                    {
-                        if(m_selectedTiles[index] == tile)
-                        {
-                            break;
-                        }
-
-                        m_selectedTiles[index].Deselect();
-                        m_selectedTiles.RemoveAt(index);
-                    }*/
-
-                    // Check if we should cancel a tile
-                    if (m_selectedTiles.Count > 1)
-                    {
-                        // Cut the last tile if the entered tile is n-1 (soft cancel)
-                        var backTile = m_selectedTiles[m_selectedTiles.Count - 2];
-                        if(backTile == tile)
-                        {
-                            var lastIndex = m_selectedTiles.Count - 1;
-                            m_selectedTiles[lastIndex].Deselect();
-                            m_selectedTiles.RemoveAt(lastIndex);
-                        }
-                    }
-                }
                 else
                 {
-                    // TODO TDA: Check if the tile type is valid (for now, the same)
-
-                    // Check if they are neighbours
-                    var lastTile = m_selectedTiles.GetLast();
-                    var distance = (lastTile.transform.position - tile.transform.position).sqrMagnitude;
-                    if(distance <= k_distanceTiles)
+                    var lastIndex = m_selectedTiles.Count - 1;
+                    var lastTile = m_selectedTiles[lastIndex];
+                    if (m_selectedTiles.Contains(tile) == true)
                     {
-                        SelectTile(tile);
+                        /*/ Cut the trailing tiles (hard cancel)
+                        for(int index = m_selectedTiles.Count - 1; index >=0; --index)
+                        {
+                            if(m_selectedTiles[index] == tile)
+                            {
+                                break;
+                            }
+
+                            m_selectedTiles[index].Deselect();
+                            m_selectedTiles.RemoveAt(index);
+                        }*/
+
+                        // Check if we should cancel a tile
+                        if (m_selectedTiles.Count > 1)
+                        {
+                            // Cut the last tile if the entered tile is n-1 (soft cancel)
+                            if (tile == m_selectedTiles[lastIndex - 1])
+                            {
+                                m_selectedTiles[lastIndex].Deselect();
+                                m_selectedTiles.RemoveAt(lastIndex);
+                            }
+                        }
+                    }
+                    else if(tile.m_tileColour == lastTile.m_tileColour)
+                    {
+                        // The tile type is valid, check if they're neighbours
+                        var distance = (lastTile.transform.position - tile.transform.position).sqrMagnitude;
+                        if(distance <= k_distanceTiles)
+                        {
+                            SelectTile(tile);
+                        }
                     }
                 }
             }
@@ -355,7 +377,6 @@ namespace MAGTask
         {
             tile.Select();
             m_selectedTiles.Add(tile);
-            Debug.LogError("Selected " + tile.m_index);
         }
 
         /// @param tile
@@ -365,7 +386,6 @@ namespace MAGTask
         {
             tile.Deselect();
             m_selectedTiles.Remove(tile);
-            Debug.LogError("Deselected " + tile.m_index);
         }
 
         /// @param tile
