@@ -55,7 +55,7 @@ namespace MAGTask
         public void Reposition()
         {
             m_tweenPosition.Stop();
-            m_tweenPosition = transform.DOMove(m_boardPosition, m_timeToDrop).SetEase(Ease.OutBack).OnComplete(() =>
+            m_tweenPosition = transform.DOMove(m_boardPosition, m_timeToDrop).OnComplete(() =>
             {
                 m_tileItem.Bounce();
             });

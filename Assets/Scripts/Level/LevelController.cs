@@ -29,6 +29,7 @@ namespace MAGTask
         private const string k_stateWin = "Win";
         private const string k_stateLose = "Lose";
 
+        private const int k_tileScore = 100;
         private const int k_minActiveTiles = 3;
         private const float k_distanceTiles = 2;
 
@@ -42,6 +43,8 @@ namespace MAGTask
         private List<TileView> m_selectedTiles = new List<TileView>();
         private Coroutine m_coroutine = null;
         private float m_spawnHeight = 0.0f;
+        private int m_previousScore = 0;
+        private int m_currentScore = 0;
         private bool m_interacting = false;
 
         #region Public functions
@@ -56,6 +59,7 @@ namespace MAGTask
             : base(localDirector, view, SceneIdentifiers.k_main)
         {
             m_view = view;
+            m_view.SetScore(m_currentScore);
 
             m_levelLoader = GlobalDirector.Service<MetadataService>().GetLoader<LevelData>() as LevelDataLoader;
             m_tileFactory = localDirector.GetFactory<TileFactory>();
@@ -209,6 +213,10 @@ namespace MAGTask
             // Pop the tiles
             m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerTilesPop(() =>
             {
+                // Update score
+                m_view.SetScore(m_previousScore, m_currentScore);
+                m_previousScore = m_currentScore;
+
                 // Add new tiles
                 var tilesToAdd = new List<TileView>(m_selectedTiles.Count);
                 foreach (var poppedTile in m_selectedTiles)
@@ -252,9 +260,12 @@ namespace MAGTask
             int popped = 0;
             foreach (var tile in m_selectedTiles)
             {
-                // TODO TDA: Add SFX
-                // TODO TDA: Add score
+                // TODO TDA: Add Audio SFX
+                // TODO TDA: Add defined score, and combo score?
+                m_currentScore += k_tileScore;
+                ParticleUtils.SpawnTextParticles(string.Format(GameTextIdentifiers.k_rewardFormat, k_tileScore), m_view.TilesHolder, tile.m_boardPosition);
                 // TODO TDA: Particles
+
                 tile.Pop(() =>
                 {
                     // Tile popped, remove it
@@ -262,7 +273,7 @@ namespace MAGTask
                     tile.gameObject.SetActive(false);
                     ++popped;
                 });
-                yield return null;
+                yield return new WaitForSeconds(0.1f);
             }
 
             while(popped < m_selectedTiles.Count)

@@ -47,9 +47,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_boardPosition: {x: 0, y: 0, z: 0}
-  m_animator: {fileID: 0}
+  m_tileItem: {fileID: 0}
+  m_tileColour: 0
   m_itemHolder: {fileID: 4789185890826673635}
   m_touchComponent: {fileID: 2646181866897626208}
+  m_timeToDrop: 0.5
 --- !u!114 &2646181866897626208
 MonoBehaviour:
   m_ObjectHideFlags: 0
