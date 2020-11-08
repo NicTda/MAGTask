@@ -3,7 +3,6 @@
 //
 
 using CoreFramework;
-using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,6 +32,9 @@ namespace MAGTask
         private const int k_minActiveTiles = 3;
         private const float k_distanceTiles = 2;
 
+        private readonly Vector3 k_boardPosBack = Vector3.forward * 5;
+        private readonly Vector3 k_boardPosFront = Vector3.back * 5;
+
         private LevelView m_view = null;
 
         private LevelDataLoader m_levelLoader = null;
@@ -45,7 +47,6 @@ namespace MAGTask
         private float m_spawnHeight = 0.0f;
         private int m_previousScore = 0;
         private int m_currentScore = 0;
-        private bool m_interacting = false;
 
         #region Public functions
         /// @param localDirector
@@ -166,21 +167,26 @@ namespace MAGTask
             RegisterTilesInput();
             m_view.OnInteractStarted += OnInteractStarted;
             m_view.OnInteractEnded += OnInteractEnded;
+
+            // TODO TDA: Check that the board has at least one valid move
+            // TODO TDA: If not, reshuffle
         }
 
         /// Called when the player starts interacting with the board
         /// 
         public void OnInteractStarted()
         {
-            m_interacting = true;
+            // Pushes the board backwards to allow touch on the tiles
+            m_view.BoardTouchArea.position = k_boardPosBack;
         }
 
         /// Called when the player ends interacting with the board
         /// 
         public void OnInteractEnded()
         {
-            m_interacting = false;
-            if(m_selectedTiles.Count >= k_minActiveTiles)
+            // Pushes the board forward to allow touch on the board
+            m_view.BoardTouchArea.position = k_boardPosFront;
+            if (m_selectedTiles.Count >= k_minActiveTiles)
             {
                 // Resolve the linking!
                 m_fsm.ExecuteAction(k_actionResolve);
@@ -263,8 +269,10 @@ namespace MAGTask
                 // TODO TDA: Add Audio SFX
                 // TODO TDA: Add defined score, and combo score?
                 m_currentScore += k_tileScore;
+
+                // Particle effect and score
                 ParticleUtils.SpawnTextParticles(string.Format(GameTextIdentifiers.k_rewardFormat, k_tileScore), m_view.TilesHolder, tile.m_boardPosition);
-                // TODO TDA: Particles
+                ParticleUtils.SpawnParticles(ParticleIdentifiers.k_tilePop, tile.m_boardPosition);
 
                 tile.Pop(() =>
                 {
@@ -350,34 +358,31 @@ namespace MAGTask
         /// 
         private void OnTileEntered(TileView tile)
         {
-            if(m_interacting == true)
+            if (m_selectedTiles.Count == 0)
             {
-                if (m_selectedTiles.Count == 0)
+                // Add the first tile to the selected list
+                SelectTile(tile);
+            }
+            else
+            {
+                var lastIndex = m_selectedTiles.Count - 1;
+                var lastTile = m_selectedTiles[lastIndex];
+                if (m_selectedTiles.Contains(tile) == true)
                 {
-                    // Add the first tile to the selected list
-                    SelectTile(tile);
-                }
-                else
-                {
-                    var lastIndex = m_selectedTiles.Count - 1;
-                    var lastTile = m_selectedTiles[lastIndex];
-                    if (m_selectedTiles.Contains(tile) == true)
+                    // Cut the last tile if the entered tile is n-1 (soft cancel)
+                    if (m_selectedTiles.Count > 1 && tile == m_selectedTiles[lastIndex - 1])
                     {
-                        // Cut the last tile if the entered tile is n-1 (soft cancel)
-                        if (m_selectedTiles.Count > 1 && tile == m_selectedTiles[lastIndex - 1])
-                        {
-                            lastTile.Deselect();
-                            m_selectedTiles.RemoveAt(lastIndex);
-                        }
+                        lastTile.Deselect();
+                        m_selectedTiles.RemoveAt(lastIndex);
                     }
-                    else if(tile.m_tileColour == lastTile.m_tileColour)
+                }
+                else if(tile.m_tileColour == lastTile.m_tileColour)
+                {
+                    // The tile type is valid, check if they're neighbours
+                    var distance = (lastTile.transform.position - tile.transform.position).sqrMagnitude;
+                    if(distance <= k_distanceTiles)
                     {
-                        // The tile type is valid, check if they're neighbours
-                        var distance = (lastTile.transform.position - tile.transform.position).sqrMagnitude;
-                        if(distance <= k_distanceTiles)
-                        {
-                            SelectTile(tile);
-                        }
+                        SelectTile(tile);
                     }
                 }
             }
@@ -406,10 +411,7 @@ namespace MAGTask
         /// 
         private void OnTileExited(TileView tile)
         {
-            if (m_interacting == true)
-            {
-                // TODO TDA: do a bounce
-            }
+            // TODO TDA: do a bounce
         }
         #endregion
     }

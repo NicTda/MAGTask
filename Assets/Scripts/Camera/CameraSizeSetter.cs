@@ -26,9 +26,7 @@ namespace CoreFramework
             {
                 m_camera = GetComponent<Camera>();
             }
-#if UNITY_EDITOR == false
             UpdateCameraSize();
-#endif
         }
 
 #if UNITY_EDITOR

@@ -26,10 +26,7 @@ namespace MAGTask
         /// 
         protected override void StartInitialisedState()
         {
-            // Make the game run as fast as possible
-            Application.targetFrameRate = 60;
-
-            // Kickstart the game's logic
+            // Create the level controller
             new LevelController(this, m_view);
         }
         #endregion

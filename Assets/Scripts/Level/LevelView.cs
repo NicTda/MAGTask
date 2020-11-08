@@ -17,6 +17,7 @@ namespace MAGTask
         public event Action OnInteractEnded;
 
         public Transform TilesHolder { get { return m_tilesHolder; } }
+        public Transform BoardTouchArea = null;
 
         [SerializeField]
         private Transform m_tilesHolder = null;
