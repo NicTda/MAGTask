@@ -13,11 +13,8 @@ namespace MAGTask
     ///
     public sealed class MapView : SceneFSMView
     {
-        public BoxCollider2D CameraBounds { get { return m_cameraBounds; } }
         public List<MapNodeView> Nodes { get { return m_nodes; } }
 
-        [SerializeField]
-        private BoxCollider2D m_cameraBounds = null;
         [SerializeField]
         private List<MapNodeView> m_nodes = new List<MapNodeView>();
 

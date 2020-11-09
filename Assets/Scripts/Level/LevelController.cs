@@ -244,23 +244,27 @@ namespace MAGTask
 
                 m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerReplaceTiles(() =>
                 {
-                    if (m_movesLeft <= 0)
+                    if (m_movesLeft > 0)
                     {
-                        // Player is out of move
-                        if (IsLevelCompleted() == true)
+                        if (IsLevelCompletedEarly() == true)
                         {
-                            // Level success
+                            // Early success
                             m_fsm.ExecuteAction(k_actionWin);
                         }
                         else
                         {
-                            // Level fail
-                            m_fsm.ExecuteAction(k_actionLose);
+                            m_fsm.ExecuteAction(k_actionIdle);
                         }
+                    }
+                    else if(IsLevelCompleted() == true)
+                    {
+                        // Level success
+                        m_fsm.ExecuteAction(k_actionWin);
                     }
                     else
                     {
-                        m_fsm.ExecuteAction(k_actionIdle);
+                        // Level fail
+                        m_fsm.ExecuteAction(k_actionLose);
                     }
                 }));
             }));
@@ -501,6 +505,14 @@ namespace MAGTask
         {
             // Check minimum score
             return m_currentScore >= m_levelData.m_scores.GetFirst();
+        }
+
+        /// @return Whether the level's objectives are done
+        /// 
+        private bool IsLevelCompletedEarly()
+        {
+            // Check maximum score
+            return m_currentScore >= m_levelData.m_scores.GetLast();
         }
         #endregion
     }

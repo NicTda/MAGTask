@@ -81,9 +81,6 @@ namespace MAGTask
         /// 
         private void EnterStateInit()
         {
-            // Set the camera bounds
-            m_cameraController.SetScreenBounds(m_view.CameraBounds.bounds.min, m_view.CameraBounds.bounds.max);
-
             // Initialise locations
             foreach (var nodeView in m_view.Nodes)
             {
@@ -91,6 +88,9 @@ namespace MAGTask
                 var nodeController = new MapNodeController(m_localDirector, nodeView);
                 m_nodes.Add(nodeController);
             }
+
+            // TODO TDA: focus on current level
+            m_cameraController.FocusOnTargetWithinBounds(m_view.Nodes.GetFirst().transform.position);
 
             m_fsm.ExecuteAction(k_actionNext);
         }
@@ -107,39 +107,6 @@ namespace MAGTask
         private void ExitStateIdle()
         {
             UnregisterBackButton();
-        }
-        #endregion
-
-        #region Private functions
-        /// @param itemView
-        ///     The requested location
-        ///     
-        private void OnLocationRequested(MapNodeView itemView)
-        {
-            if (m_nodeRequested == false)
-            {
-                // Focus on the location
-                m_cameraController.FocusOnTargetWithinBounds(itemView.transform.position);
-
-                // Check if the location is enabled
-                if (itemView.NodeType == NodeType.Level)
-                {
-                    var levelData = m_levelLoader.GetLevel(itemView.LevelIndex);
-                    if (levelData != null)
-                    {
-                        // Play that level
-                        m_nodeRequested = true;
-                        LevelLocalDirector.s_levelIndex = itemView.LevelIndex;
-                        m_sceneService.SwitchToScene(SceneIdentifiers.k_level);
-                    }
-                    else
-                    {
-                        // Open a teaser popup
-                        var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameInfo);
-                        popupView.SetBodyText("This level is not available just yet!");
-                    }
-                }
-            }
         }
         #endregion
     }
