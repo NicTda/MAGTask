@@ -21,10 +21,9 @@ namespace MAGTask
         private CameraController m_cameraController = null;
 
         private PopupService m_popupService = null;
-        private LevelDataLoader m_levelLoader = null;
 
         private List<MapNodeController> m_nodes = new List<MapNodeController>();
-        private bool m_nodeRequested = false;
+        private MapNodeController m_nodeToUnlock = null;
 
         #region Public functions
         /// @param localDirector
@@ -41,8 +40,6 @@ namespace MAGTask
             m_cameraController = cameraContoller;
 
             m_popupService = GlobalDirector.Service<PopupService>();
-            m_levelLoader = GlobalDirector.Service<MetadataService>().GetLoader<LevelData>() as LevelDataLoader;
-            m_nodes.Capacity = m_levelLoader.GetAllIDs().Count;
 
             m_audioService.PlayMusicFadeCross(AudioIdentifiers.k_musicMain);
 
@@ -82,15 +79,28 @@ namespace MAGTask
         private void EnterStateInit()
         {
             // Initialise locations
+            MapNodeView focusNode = m_view.Nodes.GetFirst();
             foreach (var nodeView in m_view.Nodes)
             {
                 // Create the node controller
                 var nodeController = new MapNodeController(m_localDirector, nodeView);
                 m_nodes.Add(nodeController);
+
+                if(nodeController.LevelModel != null)
+                {
+                    if(nodeController.LevelModel.m_nodeState == NodeState.Unlocked)
+                    {
+                        m_nodeToUnlock = nodeController;
+                    }
+                    else if (nodeController.LevelModel?.m_nodeState == NodeState.Open)
+                    {
+                        focusNode = nodeView;
+                    }
+                }
             }
 
-            // TODO TDA: focus on current level
-            m_cameraController.FocusOnTargetWithinBounds(m_view.Nodes.GetFirst().transform.position);
+            // Focus on current level
+            m_cameraController.FocusOnTargetWithinBounds(focusNode.transform.position);
 
             m_fsm.ExecuteAction(k_actionNext);
         }
@@ -100,6 +110,12 @@ namespace MAGTask
         private void EnterStateIdle()
         {
             RegisterBackButton();
+
+            if(m_nodeToUnlock != null)
+            {
+                m_cameraController.FocusOnTargetWithinBounds(m_nodeToUnlock.MapNodeView.transform.position);
+                m_nodeToUnlock.TriggerUnlock();
+            }
         }
 
         /// End of the Idle state

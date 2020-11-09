@@ -1,0 +1,242 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5174263367082679011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4960412577240796641}
+  - component: {fileID: 4961960210166301367}
+  - component: {fileID: 5070304424144474787}
+  m_Layer: 5
+  m_Name: Starburst
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4960412577240796641
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5174263367082679011}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &4961960210166301367
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5174263367082679011}
+  m_CullTransparentMesh: 0
+--- !u!114 &5070304424144474787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5174263367082679011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3733be970708b4d0a96cab4b604146c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_playOnEditor: 0
+  m_playWhenSelected: 0
+  m_isPlayingOnEditor: 0
+  m_updateTargetIndex: 0
+  m_playOnAwake: 1
+  m_isActive: 0
+  m_isPlaying: 1
+  m_Duration: 1
+  m_AutoKill: 1
+  m_EmitOnce: 1
+  m_elapsedEmitterTime: 0
+  m_editorEmitterTime: 0.0065197945
+  m_MaxParticles: 10
+  m_numberOfParticles: 0
+  m_ParticlesPerEmission: 10
+  m_EmitterRate: 10
+  m_EmitterSpread: 360
+  m_EmitterDirection: 0
+  m_Gravity: {x: 0, y: -20}
+  m_Wave: {x: 100, y: 100}
+  m_WaveAmplitude: {x: 0, y: 0}
+  m_Turbulence: {x: 100, y: 100}
+  m_TurbulenceAmplitude: {x: 0, y: 0}
+  m_EmitterShape: 3
+  m_EmitterShapeLineType: 0
+  m_EmitterShapeLinePointA: {x: 0, y: 0}
+  m_EmitterShapeLinePointB: {x: 0, y: 0}
+  m_EmitterShapeLineLength: 0
+  m_EmitterShapeLineAngle: 0
+  m_EmitterShapeRectType: 0
+  m_EmitterShapeRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 100
+    height: 100
+  m_EmitterShapeRectTransform: {fileID: 0}
+  m_EmitterShapeCircleType: 0
+  m_EmitterShapeCircleRadius: 0
+  m_EmitterShapeCircleSegments: 3
+  m_EmitterShapePointListPoints: []
+  m_EmitterShapeImage: {fileID: 0}
+  m_ParticleLife: 2
+  m_ParticleLifeRandMin: 0
+  m_ParticleLifeRandMax: 1
+  m_particleSizeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.68307483
+      value: 0.8809607
+      inSlope: -0.5923045
+      outSlope: -0.5923045
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.5638197
+    - serializedVersion: 3
+      time: 0.99753416
+      value: 0.025612712
+      inSlope: -2.7885587
+      outSlope: -2.7885587
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_particleSize: 50
+  m_ParticleSizeRandomMax: 10
+  m_particleAspectRatio: 1
+  m_ParticleSpeed: 1
+  m_ParticleSpeedRandMin: 0
+  m_ParticleSpeedRandMax: 3
+  m_AlignedRotation: 0
+  m_Stretchable: 1
+  m_StretchableMultiplier: 1
+  m_ParticleAngle: 0
+  m_ParticleAngleRandMin: 0
+  m_ParticleAngleRandMax: 0
+  m_ParticleSpinVel: 0
+  m_ParticleSpinVelRandMin: -5
+  m_ParticleSpinVelRandMax: 5
+  m_useLifeColor: 0
+  m_ParticleColorRamp:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  m_ParticleColor: {r: 1, g: 0.7843138, b: 0.07058824, a: 1}
+  m_ParticleColorArray: []
+  m_ParticleColorRandonR: 0
+  m_ParticleColorRandonG: 0
+  m_ParticleColorRandonB: 0
+  m_ParticleAlpha: 1
+  m_particleAlphaCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5655153
+      value: 0.98430943
+      inSlope: -0.29213002
+      outSlope: -0.29213002
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.48210534
+    - serializedVersion: 3
+      time: 0.9859155
+      value: 0.012658227
+      inSlope: -3.0706728
+      outSlope: -3.0706728
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  m_TextureArray:
+  - {fileID: 2800000, guid: 4a0c58a9a314b410dbd4497eca20a743, type: 3}
+  m_Texture: {fileID: 2800000, guid: 0ddb4a53322ca44c987ef9653bb22037, type: 3}
+  m_isAnimated: 0
+  m_isRandomStartFrame: 0
+  m_ParticleFrameRate: 5
+  m_particleTextureAspectRatio: 0
+  m_ParticleColliders: []

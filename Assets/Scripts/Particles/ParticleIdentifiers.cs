@@ -13,6 +13,7 @@ namespace MAGTask
         public static readonly string k_textReward = "Particles/TextReward";
         public static readonly string k_currencyReward = "Particles/CurrencyReward";
         public static readonly string k_starburst = "Particles/Starburst";
+        public static readonly string k_starburstUI = "Particles/StarburstUI";
 
         /// Linking game
         /// 

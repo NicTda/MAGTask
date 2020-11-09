@@ -41,7 +41,6 @@ namespace MAGTask
         private AudioService m_audioService = null;
         private PopupService m_popupService = null;
         private SceneService m_sceneService = null;
-        private GameProgressService m_progressService = null;
 
         private static List<TopPanelView> s_instance = new List<TopPanelView>();
         private static bool s_showMaxed = false;
@@ -73,7 +72,6 @@ namespace MAGTask
             m_audioService = GlobalDirector.Service<AudioService>();
             m_popupService = GlobalDirector.Service<PopupService>();
             m_sceneService = GlobalDirector.Service<SceneService>();
-            m_progressService = GlobalDirector.Service<GameProgressService>();
 
             m_sceneService.OnSceneActive += OnSceneActive;
             if (s_instance.Contains(this) == false)

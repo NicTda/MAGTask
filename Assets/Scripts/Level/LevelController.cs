@@ -14,8 +14,6 @@ namespace MAGTask
     /// 
     public sealed class LevelController : SceneFSMController
     {
-        private const string k_slotName = "Slot{0}";
-
         private const string k_actionNext = "Next";
         private const string k_actionIdle = "Idle";
         private const string k_actionReload = "Reload";
@@ -42,9 +40,9 @@ namespace MAGTask
         private LevelView m_view = null;
         private LevelData m_levelData = null;
 
-        private LevelDataLoader m_levelLoader = null;
-        private PopupService m_popupService = null;
         private TileFactory m_tileFactory = null;
+        private LevelService m_levelService = null;
+        private PopupService m_popupService = null;
 
         private List<TileView> m_tiles = new List<TileView>();
         private List<TileView> m_selectedTiles = new List<TileView>();
@@ -67,11 +65,9 @@ namespace MAGTask
         {
             m_view = view;
 
-            m_popupService = GlobalDirector.Service<PopupService>();
             m_tileFactory = localDirector.GetFactory<TileFactory>();
-            m_levelLoader = GlobalDirector.Service<MetadataService>().GetLoader<LevelData>() as LevelDataLoader;
-            m_levelData = m_levelLoader.GetLevel(LevelLocalDirector.s_levelIndex);
-            m_view.ScoreView.InitialiseScores(m_levelData.m_scores);
+            m_levelService = GlobalDirector.Service<LevelService>();
+            m_popupService = GlobalDirector.Service<PopupService>();
 
             m_audioService.PlayMusicFadeCross(AudioIdentifiers.k_musicLevel);
 
@@ -79,8 +75,8 @@ namespace MAGTask
             m_fsm.RegisterStateCallback(k_stateIdle, EnterStateIdle, null, ExitStateIdle);
             m_fsm.RegisterStateCallback(k_stateShuffle, EnterStateShuffle, null, null);
             m_fsm.RegisterStateCallback(k_stateResolve, EnterStateResolve, null, ExitStateResolve);
-            m_fsm.RegisterStateCallback(k_stateWin, EnterStateWin, null, ExitStateWin);
-            m_fsm.RegisterStateCallback(k_stateLose, EnterStateLose, null, ExitStateLose);
+            m_fsm.RegisterStateCallback(k_stateWin, EnterStateWin, null, null);
+            m_fsm.RegisterStateCallback(k_stateLose, EnterStateLose, null, null);
             m_fsm.ExecuteAction(k_actionNext);
         }
 
@@ -111,6 +107,9 @@ namespace MAGTask
         /// 
         private void EnterStateLoad()
         {
+            m_levelData = m_levelService.GetLevelData(LevelLocalDirector.s_levelIndex);
+            m_view.ScoreView.InitialiseScores(m_levelData.m_scores);
+
             // Load level data
             m_tiles.Capacity = m_levelData.m_height * m_levelData.m_width;
             m_selectedTiles.Capacity = m_levelData.m_height * m_levelData.m_width;
@@ -407,6 +406,12 @@ namespace MAGTask
         /// 
         private void EnterStateWin()
         {
+            // Register the level as completed
+            m_levelService.SetLevelCompleted(m_levelData.m_index, m_currentScore);
+
+            // Unlock next level
+            m_levelService.SetLevelUnlocked(m_levelData.m_index + 1);
+
             // Ceremony
 
             // Reward
@@ -419,12 +424,6 @@ namespace MAGTask
                 // TODO TDA: home, retry, next
                 m_sceneService.SwitchToScene(SceneIdentifiers.k_map);
             };
-        }
-
-        /// End of the Win state
-        /// 
-        private void ExitStateWin()
-        {
         }
 
         /// Start of the Lose state
@@ -444,12 +443,6 @@ namespace MAGTask
             {
                 base.OnBackButtonRequest();
             };
-        }
-
-        /// End of the Lose state
-        /// 
-        private void ExitStateLose()
-        {
         }
         #endregion
 

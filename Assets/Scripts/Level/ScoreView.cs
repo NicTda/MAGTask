@@ -89,7 +89,7 @@ namespace MAGTask
                         {
                             // The star is filled!
                             shouldContinue = true;
-                            ParticleUtils.SpawnParticles(ParticleIdentifiers.k_starburst, transform, m_starsProgress[index].transform.position);
+                            ParticleUtils.SpawnParticles(ParticleIdentifiers.k_starburstUI, transform, m_starsProgress[index].transform.position);
                         }
                     });
 

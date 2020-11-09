@@ -12,4 +12,14 @@ namespace MAGTask
         Level = 1,
         Gate = 2,
     }
+
+    /// The possible node states
+    /// 
+    public enum NodeState
+    {
+        Locked = 0,
+        Unlocked = 1,
+        Open = 2,
+        Completed = 3,
+    }
 }

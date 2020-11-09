@@ -32,7 +32,7 @@ namespace MAGTask
             m_serviceSupplier.RegisterService<AudioService>();
             m_serviceSupplier.RegisterService<TimeService>();
             m_serviceSupplier.RegisterService<BankService>();
-            m_serviceSupplier.RegisterService<LocalSaveService>();
+            m_serviceSupplier.RegisterService<LevelService>();
             //m_serviceSupplier.RegisterService<GameTransactionService>();
             //m_serviceSupplier.RegisterService<GameSettingsService>();
             //m_serviceSupplier.RegisterService<RewardService>();
@@ -51,7 +51,6 @@ namespace MAGTask
             //PopupView.s_sfxDismiss = AudioIdentifiers.k_sfxPopupDismiss;
 
             // Starting currencies
-            var gameProgressService = m_serviceSupplier.RegisterService<GameProgressService>();
             //gameProgressService.AddStartCurrency(OverlayBankIdentifiers.k_currencyPremium, 500);
 
             // Metadata

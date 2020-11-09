@@ -25,10 +25,4 @@ namespace MAGTask
         Reshuffle = 1,
         Recreate = 2,
     }
-
-    /// Tile identifiers
-    /// 
-    public sealed class TileIdentifiers
-    {
-    }
 }

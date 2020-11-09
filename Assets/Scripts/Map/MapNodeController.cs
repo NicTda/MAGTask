@@ -12,21 +12,22 @@ namespace MAGTask
     {
         private const string k_actionNext = "Next";
         private const string k_actionLock = "Lock";
+        private const string k_actionOpen = "Open";
         private const string k_actionUnlock = "Unlock";
         private const string k_actionComplete = "Complete";
 
         private const string k_stateInit = "Init";
         private const string k_stateIdle = "Idle";
         private const string k_stateLocked = "Locked";
+        private const string k_stateUnlock = "Unlock";
         private const string k_stateDone = "Done";
 
-        private MapNodeView m_view = null;
+        public MapNodeView MapNodeView { get; private set; } = null;
+        public LevelModel LevelModel { get; private set; } = null;
 
         private PopupService m_popupService = null;
+        private LevelService m_levelService = null;
         private LevelDataLoader m_levelLoader = null;
-        private GameProgressService m_progressService = null;
-
-        private LevelData m_levelData = null;
 
         #region Public functions
         /// @param localDirector
@@ -39,17 +40,26 @@ namespace MAGTask
         public MapNodeController(LocalDirector localDirector, MapNodeView view)
             : base(localDirector, view)
         {
-            m_view = view;
-
             m_popupService = GlobalDirector.Service<PopupService>();
-            m_progressService = GlobalDirector.Service<GameProgressService>();
+            m_levelService = GlobalDirector.Service<LevelService>();
             m_levelLoader = GlobalDirector.Service<MetadataService>().GetLoader<LevelData>() as LevelDataLoader;
+
+            MapNodeView = view;
+            LevelModel = m_levelService.GetLevelModel(MapNodeView.LevelIndex);
 
             m_fsm.RegisterStateCallback(k_stateInit, EnterStateInit, null, null);
             m_fsm.RegisterStateCallback(k_stateIdle, EnterStateIdle, null, ExitStateIdle);
             m_fsm.RegisterStateCallback(k_stateLocked, EnterStateLocked, null, ExitStateLocked);
+            m_fsm.RegisterStateCallback(k_stateUnlock, null, null, ExitStateUnlock);
             m_fsm.RegisterStateCallback(k_stateDone, EnterStateDone, null, ExitStateDone);
             m_fsm.ExecuteAction(k_actionNext);
+        }
+
+        /// Trigger the unlock of the node
+        /// 
+        public void TriggerUnlock()
+        {
+            m_fsm.ExecuteAction(k_actionUnlock);
         }
         #endregion
 
@@ -58,20 +68,19 @@ namespace MAGTask
         /// 
         private void EnterStateInit()
         {
-            m_levelData = m_levelLoader.GetLevel(m_view.LevelIndex);
-
             // Check the level's progress
-            if(m_levelData == null || m_levelData.m_index > m_progressService.m_level)
+            var nodeState = m_levelService.GetLevelState(MapNodeView.LevelIndex);
+            if (nodeState == NodeState.Completed)
             {
-                m_fsm.ExecuteAction(k_actionLock);
+                m_fsm.ExecuteAction(k_actionComplete);
             }
-            else if (m_levelData.m_index == m_progressService.m_level)
+            else if (nodeState == NodeState.Open)
             {
-                m_fsm.ExecuteAction(k_actionUnlock);
+                m_fsm.ExecuteAction(k_actionOpen);
             }
             else
             {
-                m_fsm.ExecuteAction(k_actionComplete);
+                m_fsm.ExecuteAction(k_actionLock);
             }
         }
 
@@ -79,7 +88,7 @@ namespace MAGTask
         /// 
         private void EnterStateLocked()
         {
-            m_view.OnRequested += OnLockedTapped;
+            MapNodeView.OnRequested += OnLockedTapped;
         }
 
         private void OnLockedTapped()
@@ -93,42 +102,52 @@ namespace MAGTask
         /// 
         private void ExitStateLocked()
         {
-            m_view.OnRequested -= OnLockedTapped;
+            MapNodeView.OnRequested -= OnLockedTapped;
+        }
+
+        /// End of the Unlock state
+        /// 
+        private void ExitStateUnlock()
+        {
+            // Save the level state
+            m_levelService.SetLevelOpen(LevelModel.m_index);
+
+            // Particles
+            ParticleUtils.SpawnParticles(ParticleIdentifiers.k_starburst, MapNodeView.transform.position);
         }
 
         /// Start of the Idle state
         /// 
         private void EnterStateIdle()
         {
-            m_view.OnRequested += OnPlayLevelRequested;
+            MapNodeView.OnRequested += OnPlayLevelRequested;
         }
 
         private void OnPlayLevelRequested()
         {
-            // TODO TDA: Query the LevelService for this instead
-            //LevelLocalDirector.s_levelIndex = itemView.LevelIndex;
-            GlobalDirector.Service<SceneService>().SwitchToScene(SceneIdentifiers.k_level);
+            // Start the level
+            m_levelService.PlayLevel(MapNodeView.LevelIndex);
         }
 
         /// End of the Idle state
         /// 
         private void ExitStateIdle()
         {
-            m_view.OnRequested -= OnPlayLevelRequested;
+            MapNodeView.OnRequested -= OnPlayLevelRequested;
         }
 
         /// Start of the Done state
         /// 
         private void EnterStateDone()
         {
-            m_view.OnRequested += OnPlayLevelRequested;
+            MapNodeView.OnRequested += OnPlayLevelRequested;
         }
 
         /// End of the Done state
         /// 
         private void ExitStateDone()
         {
-            m_view.OnRequested -= OnPlayLevelRequested;
+            MapNodeView.OnRequested -= OnPlayLevelRequested;
         }
         #endregion
     }
