@@ -42,22 +42,25 @@ namespace MAGTask
             m_tweenPosition.Stop();
         }
 
-        /// Called when the tile should appear
+        /// @param callback
+        ///     The function to call when the animation is finished
         /// 
-        public void Appear()
+        public void Appear(Action callback = null)
         {
             m_tileItem.Appear();
-            Reposition();
+            Reposition(callback);
         }
 
-        /// Called when the tile should reposition itself
+        /// @param callback
+        ///     The function to call when the animation is finished
         /// 
-        public void Reposition()
+        public void Reposition(Action callback = null)
         {
             m_tweenPosition.Stop();
             m_tweenPosition = transform.DOMove(m_boardPosition, m_timeToDrop).OnComplete(() =>
             {
                 m_tileItem.Bounce();
+                callback.SafeInvoke();
             });
         }
 

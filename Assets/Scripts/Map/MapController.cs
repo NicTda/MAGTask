@@ -51,6 +51,19 @@ namespace MAGTask
             m_fsm.ExecuteAction(k_actionNext);
         }
 
+        /// Called when the player wants to go back to the main menu
+        ///     
+        protected override void OnBackButtonRequest()
+        {
+            m_audioService.PlaySFX(AudioIdentifiers.k_sfxButtonBack);
+            var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameQuestionProminent) as PopupYesNoView;
+            popupView.SetBodyText("Do you want to go back to the main menu?");
+            popupView.OnPopupConfirmed += () =>
+            {
+                base.OnBackButtonRequest();
+            };
+        }
+
         /// Implement this method if the child class needs to be disposed
         /// 
         public override void OnDispose()
@@ -98,19 +111,6 @@ namespace MAGTask
         #endregion
 
         #region Private functions
-        /// Called when the player wants to go back to the main menu
-        ///     
-        protected override void OnBackButtonRequest()
-        {
-            m_audioService.PlaySFX(AudioIdentifiers.k_sfxButtonBack);
-            var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameQuestionProminent) as PopupYesNoView;
-            popupView.SetBodyText("Do you want to go back to the main menu?");
-            popupView.OnPopupConfirmed += () =>
-            {
-                base.OnBackButtonRequest();
-            };
-        }
-
         /// @param itemView
         ///     The requested location
         ///     

@@ -23,8 +23,18 @@ namespace MAGTask
         private Transform m_tilesHolder = null;
         [SerializeField]
         private TMP_Text m_scoreText = null;
+        [SerializeField]
+        private TMP_Text m_moveText = null;
 
         #region Public functions
+        /// @param moves
+        ///     The moves to set
+        /// 
+        public void SetMovesLeft(string moves)
+        {
+            m_moveText.SafeText(moves);
+        }
+        
         /// @param score
         ///     The score to set
         /// 

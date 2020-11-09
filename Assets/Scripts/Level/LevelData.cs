@@ -16,6 +16,7 @@ namespace MAGTask
         private const string k_keyTiles = "Tiles";
         private const string k_keyHeight = "Height";
         private const string k_keyWidth = "Width";
+        private const string k_keyMoves = "Moves";
         private const string k_keyObjectives = "Objectives";
         private const string k_keyReward = "Reward";
 
@@ -26,6 +27,7 @@ namespace MAGTask
         public int m_index { get; private set; } = 0;
         public int m_width { get; private set; } = 5;
         public int m_height { get; private set; } = 5;
+        public int m_moves { get; private set; } = 10;
         public CurrencyItem m_reward { get; private set; } = null;
 
         #region ISerializable functions
@@ -53,6 +55,10 @@ namespace MAGTask
             if (jsonData.ContainsKey(k_keyWidth))
             {
                 m_width = jsonData.GetInt(k_keyWidth);
+            }
+            if (jsonData.ContainsKey(k_keyMoves))
+            {
+                m_moves = jsonData.GetInt(k_keyMoves);
             }
             if (jsonData.ContainsKey(k_keyTiles))
             {
