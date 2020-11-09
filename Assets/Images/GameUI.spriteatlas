@@ -31,7 +31,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 0dc2f15a08d3b504099ab1c7ce1a14c8, type: 3}
-    totalSpriteSurfaceArea: 1187289
+    totalSpriteSurfaceArea: 1269241
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -47,6 +47,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 795cbc9196178ab46aeff924464120c2, type: 3}
   - {fileID: 21300000, guid: e6376ff150855cf4f994ac037f6ef307, type: 3}
   - {fileID: 21300000, guid: 9dfd4252efb4fbf4999c9a187c74d04b, type: 3}
+  - {fileID: 21300000, guid: bb18a003d115dba4fa8491a4eb3ed9e8, type: 3}
   - {fileID: 21300000, guid: 92f6ac14acddfea4f83aefa329280e0e, type: 3}
   - {fileID: 21300000, guid: dc56d7342edc0d4408078aed26ca6986, type: 3}
   - {fileID: 21300000, guid: 77677a44aba3a444499e1012bda60357, type: 3}
@@ -67,6 +68,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 84ca60294d7551a4a85d6b5a3d8b7700, type: 3}
   - {fileID: 21300000, guid: c8995f3933c55e24480675b40aac2dee, type: 3}
   - {fileID: 21300000, guid: 7517e44923cb576448a7dbe57453ed28, type: 3}
+  - {fileID: 21300000, guid: 4e778569c993ed14dbcc5d6f82112677, type: 3}
   - {fileID: 21300000, guid: 70d7cfb9e1b0c2046b81c201c72ce6b5, type: 3}
   - {fileID: 21300000, guid: e04d88c93cce649429a78e777fa922dc, type: 3}
   - {fileID: 21300000, guid: 8ca1e83a32598944f9fbf7ce6b9d2dd5, type: 3}
@@ -87,6 +89,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9d25953dd3d1eb64baf55226b4b6dae0, type: 3}
   - {fileID: 21300000, guid: 0ef0719db816eb9458931b8bf92603a6, type: 3}
   - {fileID: 21300000, guid: 78db3cbdb8dfffe4d9cc11636d00b8d9, type: 3}
+  - {fileID: 21300000, guid: 6d6d230e753a358469719f3e6005dc28, type: 3}
   - {fileID: 21300000, guid: 36ab501e06099bb42b51b5c5974ab0e2, type: 3}
   - {fileID: 21300000, guid: d12e856e140ac1f419bae61278909936, type: 3}
   - {fileID: 21300000, guid: 0b7ef86e395f06549bfc1198af9c803b, type: 3}
@@ -110,6 +113,7 @@ SpriteAtlas:
   - DoorLabelBase
   - ButtonRed
   - PanelGrey
+  - PanelGold
   - SliderVertical
   - PanelGreen
   - IconSFXOn
@@ -130,6 +134,7 @@ SpriteAtlas:
   - Check
   - IconTick
   - Sound
+  - star
   - IconOptions
   - ButtonOrange
   - IconTimer
@@ -150,6 +155,7 @@ SpriteAtlas:
   - PanelHudYellow
   - Loading
   - IconMusicOff
+  - staroff
   - IconCounter
   - OfferIcon
   - IconSFXOff

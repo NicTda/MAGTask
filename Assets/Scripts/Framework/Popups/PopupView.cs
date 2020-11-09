@@ -66,7 +66,6 @@ namespace CoreFramework
             m_audioService = GlobalDirector.Service<AudioService>();
             m_inputService = GlobalDirector.Service<InputService>();
             m_localisationService = GlobalDirector.Service<LocalisationService>();
-            SetConfirmButtonText(m_localisationService.GetGameText(LocalisedTextIdentifiers.k_confirmButton));
 
             InitialiseInternal();
         }
