@@ -11,6 +11,8 @@ namespace MAGTask
     /// 
     public sealed class LevelLocalDirector : LocalDirector
     {
+        public static int s_levelIndex = 0;
+
         [SerializeField]
         private LevelView m_view = null;
 

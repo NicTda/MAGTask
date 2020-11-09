@@ -21,5 +21,17 @@ namespace MAGTask
             m_loaderBehaviour = LoaderBehaviour.LoadAllAtInit;
         }
         #endregion
+
+        #region Public functions
+        /// @param index
+        ///     The index of the level to get
+        ///     
+        /// @return The level data for that index, or null
+        /// 
+        public LevelData GetLevel(int index)
+        {
+            return GetAllItems().Find((data) => data.m_index == index);
+        }
+        #endregion
     }
 }

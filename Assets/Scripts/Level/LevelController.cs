@@ -62,8 +62,9 @@ namespace MAGTask
             m_view = view;
             m_view.SetScore(m_currentScore);
 
-            m_levelLoader = GlobalDirector.Service<MetadataService>().GetLoader<LevelData>() as LevelDataLoader;
             m_tileFactory = localDirector.GetFactory<TileFactory>();
+            m_levelLoader = GlobalDirector.Service<MetadataService>().GetLoader<LevelData>() as LevelDataLoader;
+            m_levelData = m_levelLoader.GetLevel(LevelLocalDirector.s_levelIndex);
 
             m_audioService.PlayMusicFadeCross(AudioIdentifiers.k_musicLevel);
 
@@ -89,9 +90,7 @@ namespace MAGTask
         /// 
         private void EnterStateLoad()
         {
-            // TODO TDA: level ID from current progression
             // Load level data
-            m_levelData = m_levelLoader.GetItem("Level0");
             m_tiles.Capacity = m_levelData.m_height * m_levelData.m_width;
             m_selectedTiles.Capacity = m_levelData.m_height * m_levelData.m_width;
             m_spawnHeight = m_levelData.m_height * 0.5f + 1.0f;
