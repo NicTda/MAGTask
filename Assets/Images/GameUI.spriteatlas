@@ -31,7 +31,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 0dc2f15a08d3b504099ab1c7ce1a14c8, type: 3}
-    totalSpriteSurfaceArea: 1078804
+    totalSpriteSurfaceArea: 1117120
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -64,6 +64,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e04d88c93cce649429a78e777fa922dc, type: 3}
   - {fileID: 21300000, guid: bc72365aaf41ea248a02a56c5cfaaaa0, type: 3}
   - {fileID: 21300000, guid: 5cab1a6aa948cc24585388011867097a, type: 3}
+  - {fileID: 21300000, guid: 11fd459a7a223f64d84ff4cbd84c3829, type: 3}
   - {fileID: 21300000, guid: 9133289aee712e54e917ffcf692f4b51, type: 3}
   - {fileID: 21300000, guid: 4c51edca0531bc54b9a8dd32da49ac91, type: 3}
   - {fileID: 21300000, guid: d5dd8bea000e7c944b52e71f5103629d, type: 3}
@@ -110,10 +111,11 @@ SpriteAtlas:
   - ButtonOrange
   - IconGlow
   - LeaderboardG
+  - PanelYellow
   - Play
   - Home
   - ButtonGrey
-  - PanelYellow
+  - PanelOrange
   - CheckG
   - LevelGridG
   - Back

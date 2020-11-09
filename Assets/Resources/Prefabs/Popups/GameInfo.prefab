@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 3
-  m_AspectRatio: 1
+  m_AspectRatio: 0.75
 --- !u!225 &5659678514948051404
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -645,7 +645,7 @@ Animator:
   m_GameObject: {fileID: 1999452543391620655}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 19be40e88443e994c922faf5229fcf7b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
