@@ -63,12 +63,12 @@ namespace MAGTask
             : base(localDirector, view, SceneIdentifiers.k_main)
         {
             m_view = view;
-            m_view.SetScore(m_currentScore);
 
             m_popupService = GlobalDirector.Service<PopupService>();
             m_tileFactory = localDirector.GetFactory<TileFactory>();
             m_levelLoader = GlobalDirector.Service<MetadataService>().GetLoader<LevelData>() as LevelDataLoader;
             m_levelData = m_levelLoader.GetLevel(LevelLocalDirector.s_levelIndex);
+            m_view.ScoreView.InitialiseScores(m_levelData.m_scores);
 
             m_audioService.PlayMusicFadeCross(AudioIdentifiers.k_musicLevel);
 
@@ -237,18 +237,26 @@ namespace MAGTask
             m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerTilesPop(() =>
             {
                 // Update score
-                m_view.SetScore(m_previousScore, m_currentScore);
-                m_previousScore = m_currentScore;
+                m_view.ScoreView.SetScore(m_currentScore);
 
                 // Update moves
                 SetMovesLeft(m_movesLeft - 1);
 
                 m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerReplaceTiles(() =>
                 {
-                    // TODO TDA: Check objectives
                     if (m_movesLeft <= 0)
                     {
-                        m_fsm.ExecuteAction(k_actionLose);
+                        // Player is out of move
+                        if (IsLevelCompleted() == true)
+                        {
+                            // Level success
+                            m_fsm.ExecuteAction(k_actionWin);
+                        }
+                        else
+                        {
+                            // Level fail
+                            m_fsm.ExecuteAction(k_actionLose);
+                        }
                     }
                     else
                     {
@@ -353,6 +361,13 @@ namespace MAGTask
             // Reward
 
             // Next level or back to map
+            var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameInfo);
+            popupView.SetBodyText("Well done! Level {0} completed!", m_levelData.m_index);
+            popupView.OnPopupDismissed += (popup) =>
+            {
+                // TODO TDA: home, retry, next
+                m_sceneService.SwitchToScene(SceneIdentifiers.k_map);
+            };
         }
 
         /// End of the Win state
@@ -478,6 +493,14 @@ namespace MAGTask
         {
             m_movesLeft = moves;
             m_view.SetMovesLeft(m_movesLeft.ToString());
+        }
+
+        /// @return Whether the level's objectives are done
+        /// 
+        private bool IsLevelCompleted()
+        {
+            // Check minimum score
+            return m_currentScore >= m_levelData.m_scores.GetFirst();
         }
         #endregion
     }

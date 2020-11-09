@@ -16,13 +16,14 @@ namespace MAGTask
         public event Action OnInteractStarted;
         public event Action OnInteractEnded;
 
+        public ScoreView ScoreView { get { return m_scoreView; } }
         public Transform TilesHolder { get { return m_tilesHolder; } }
         public Transform BoardTouchArea = null;
 
         [SerializeField]
         private Transform m_tilesHolder = null;
         [SerializeField]
-        private TMP_Text m_scoreText = null;
+        private ScoreView m_scoreView = null;
         [SerializeField]
         private TMP_Text m_moveText = null;
 
@@ -33,22 +34,6 @@ namespace MAGTask
         public void SetMovesLeft(string moves)
         {
             m_moveText.SafeText(moves);
-        }
-        
-        /// @param score
-        ///     The score to set
-        /// 
-        public void SetScore(int score)
-        {
-            m_scoreText.SafeText(TextUtils.GetFormattedCurrencyString(score));
-        }
-
-        /// @param score
-        ///     The score to set
-        /// 
-        public void SetScore(int previouScore, int newScore)
-        {
-            m_scoreText.DOCount(previouScore, newScore, 1.0f);
         }
 
         /// Called when the player starts interacting with the board

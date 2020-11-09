@@ -17,6 +17,7 @@ namespace MAGTask
         private const string k_keyHeight = "Height";
         private const string k_keyWidth = "Width";
         private const string k_keyMoves = "Moves";
+        private const string k_keyScores = "Scores";
         private const string k_keyObjectives = "Objectives";
         private const string k_keyReward = "Reward";
 
@@ -24,6 +25,7 @@ namespace MAGTask
         public string m_type { get; private set; } = string.Empty;
         public List<string> m_objectives { get; private set; } = new List<string>();
         public List<int> m_tiles { get; private set; } = new List<int>();
+        public List<int> m_scores { get; private set; } = new List<int>();
         public int m_index { get; private set; } = 0;
         public int m_width { get; private set; } = 5;
         public int m_height { get; private set; } = 5;
@@ -59,6 +61,10 @@ namespace MAGTask
             if (jsonData.ContainsKey(k_keyMoves))
             {
                 m_moves = jsonData.GetInt(k_keyMoves);
+            }
+            if (jsonData.ContainsKey(k_keyScores))
+            {
+                m_scores = jsonData.GetValue(k_keyScores).AsList<int>();
             }
             if (jsonData.ContainsKey(k_keyTiles))
             {
