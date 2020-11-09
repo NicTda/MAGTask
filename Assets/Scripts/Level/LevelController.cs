@@ -18,12 +18,15 @@ namespace MAGTask
 
         private const string k_actionNext = "Next";
         private const string k_actionIdle = "Idle";
+        private const string k_actionReload = "Reload";
+        private const string k_actionShuffle = "Shuffle";
         private const string k_actionResolve = "Resolve";
         private const string k_actionWin = "Win";
         private const string k_actionLose = "Lose";
 
         private const string k_stateLoad = "Load";
         private const string k_stateIdle = "Idle";
+        private const string k_stateShuffle = "Shuffle";
         private const string k_stateResolve = "Resolve";
         private const string k_stateWin = "Win";
         private const string k_stateLose = "Lose";
@@ -74,6 +77,7 @@ namespace MAGTask
 
             m_fsm.RegisterStateCallback(k_stateLoad, EnterStateLoad, null, ExitStateLoad);
             m_fsm.RegisterStateCallback(k_stateIdle, EnterStateIdle, null, ExitStateIdle);
+            m_fsm.RegisterStateCallback(k_stateShuffle, EnterStateShuffle, null, null);
             m_fsm.RegisterStateCallback(k_stateResolve, EnterStateResolve, null, ExitStateResolve);
             m_fsm.RegisterStateCallback(k_stateWin, EnterStateWin, null, ExitStateWin);
             m_fsm.RegisterStateCallback(k_stateLose, EnterStateLose, null, ExitStateLose);
@@ -166,6 +170,7 @@ namespace MAGTask
             TileColour randomColour = (TileColour)m_levelData.m_tiles.GetRandom();
             var tileView = m_tileFactory.CreateTile(randomColour, m_view.TilesHolder, spawnPosition);
             tileView.m_boardPosition = boardPosition;
+            tileView.name = boardPosition.ToString();
             return tileView;
         }
 
@@ -185,8 +190,23 @@ namespace MAGTask
             m_view.OnInteractStarted += OnInteractStarted;
             m_view.OnInteractEnded += OnInteractEnded;
 
-            // TODO TDA: Check that the board has at least one valid move
-            // TODO TDA: If not, reshuffle
+            // Check that the board has at least one valid move
+            var boardState = ValidateBoard();
+            if (boardState == BoardState.Reshuffle)
+            {
+                // The board needs reshuffled
+                m_fsm.ExecuteAction(k_actionShuffle);
+            }
+            else if(boardState == BoardState.Recreate)
+            {
+                // We can't reshuffle the board as it is, we need to recreate it
+                foreach (var tile in m_tiles)
+                {
+                    GameObject.Destroy(tile.gameObject);
+                }
+                m_tiles.Clear();
+                m_fsm.ExecuteAction(k_actionReload);
+            }
         }
 
         /// Called when the player starts interacting with the board
@@ -227,6 +247,33 @@ namespace MAGTask
             UnregisterTilesInput();
             m_view.OnInteractStarted -= OnInteractStarted;
             m_view.OnInteractEnded -= OnInteractEnded;
+        }
+
+        /// Start of the Shuffle state
+        /// 
+        private void EnterStateShuffle()
+        {
+            // Get all board positions
+            var tilePositions = new List<Vector3>(m_tiles.Count);
+            foreach (var tile in m_tiles)
+            {
+                tilePositions.Add(tile.m_boardPosition);
+            }
+
+            // Assign new positions to the tiles
+            int repositioned = 0;
+            foreach (var tile in m_tiles)
+            {
+                tile.m_boardPosition = tilePositions.ExtractRandom();
+                tile.Reposition(() =>
+                {
+                    ++repositioned;
+                    if(repositioned == m_tiles.Count)
+                    {
+                        m_fsm.ExecuteAction(k_actionIdle);
+                    }
+                });
+            }
         }
 
         /// Start of the Resolve state
@@ -443,6 +490,8 @@ namespace MAGTask
             {
                 var lastIndex = m_selectedTiles.Count - 1;
                 var lastTile = m_selectedTiles[lastIndex];
+
+                // Check if the player is swiping back on the tiles
                 if (m_selectedTiles.Contains(tile) == true)
                 {
                     // Cut the last tile if the entered tile is n-1 (soft cancel)
@@ -497,6 +546,86 @@ namespace MAGTask
         {
             m_movesLeft = moves;
             m_view.SetMovesLeft(m_movesLeft.ToString());
+        }
+
+        /// @return Whether the current board has at least a valid move
+        /// 
+        private BoardState ValidateBoard()
+        {
+            var boardState = BoardState.Recreate;
+            List<TileView> pendingTiles = new List<TileView>(m_tiles.Count);
+            List<TileView> currentChain = new List<TileView>(9);
+            TileView activeTile = null;
+
+            // Check each colour on the board
+            foreach (var colourID in m_levelData.m_tiles)
+            {
+                var tileColour = (TileColour)colourID;
+                pendingTiles = m_tiles.FindAll((view) => view.m_tileColour == tileColour);
+                if (pendingTiles.Count < k_minActiveTiles)
+                {
+                    // No need to check the colours that can't have valid matches
+                    continue;
+                }
+
+                // At least one colour is valid
+                boardState = BoardState.Reshuffle;
+
+                // Check chains on the valid colours
+                currentChain.Clear();
+                while (pendingTiles.Count > 0)
+                {
+                    if (boardState == BoardState.Valid)
+                    {
+                        break;
+                    }
+
+                    if (activeTile == null)
+                    {
+                        // Get a random tile to check
+                        activeTile = pendingTiles.ExtractRandom();
+                    }
+
+                    // Get its valid neighbours
+                    var validNeighbours = new List<Vector3>()
+                    {
+                        activeTile.m_boardPosition + Vector3.left + Vector3.up,
+                        activeTile.m_boardPosition + Vector3.left,
+                        activeTile.m_boardPosition + Vector3.left + Vector3.down,
+                        activeTile.m_boardPosition + Vector3.up,
+                        activeTile.m_boardPosition + Vector3.down,
+                        activeTile.m_boardPosition + Vector3.right + Vector3.up,
+                        activeTile.m_boardPosition + Vector3.right,
+                        activeTile.m_boardPosition + Vector3.right + Vector3.down,
+                    };
+
+                    var neighbours = pendingTiles.FindAll((view) => validNeighbours.Contains(view.m_boardPosition));
+                    if (neighbours.Count == 0)
+                    {
+                        // No valid neighbour, we stop that chain
+                        currentChain.Clear();
+                        activeTile = null;
+                    }
+                    else if (currentChain.Count + neighbours.Count >= k_minActiveTiles - 1)
+                    {
+                        // If there's a valid chain, the board is valid
+                        boardState = BoardState.Valid;
+                        break;
+                    }
+                    else
+                    {
+                        // There is a chain, but not long enough
+                        activeTile = neighbours.GetRandom();
+                        currentChain.AddRange(neighbours);
+                        foreach (var neighbour in neighbours)
+                        {
+                            pendingTiles.Remove(neighbour);
+                        }
+                    }
+                }
+            }
+
+            return boardState;
         }
 
         /// @return Whether the level's objectives are done
