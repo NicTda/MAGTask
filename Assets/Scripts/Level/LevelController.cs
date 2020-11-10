@@ -22,6 +22,7 @@ namespace MAGTask
         private const string k_actionWin = "Win";
         private const string k_actionLose = "Lose";
 
+        private const string k_stateInit = "Init";
         private const string k_stateLoad = "Load";
         private const string k_stateIdle = "Idle";
         private const string k_stateShuffle = "Shuffle";
@@ -86,7 +87,8 @@ namespace MAGTask
 
             m_audioService.PlayMusicFadeCross(AudioIdentifiers.k_musicLevel);
 
-            m_fsm.RegisterStateCallback(k_stateLoad, EnterStateLoad, null, ExitStateLoad);
+            m_fsm.RegisterStateCallback(k_stateInit, EnterStateInit, null, null);
+            m_fsm.RegisterStateCallback(k_stateLoad, EnterStateLoad, null, null);
             m_fsm.RegisterStateCallback(k_stateIdle, EnterStateIdle, null, ExitStateIdle);
             m_fsm.RegisterStateCallback(k_stateShuffle, EnterStateShuffle, null, null);
             m_fsm.RegisterStateCallback(k_stateResolve, EnterStateResolve, null, ExitStateResolve);
@@ -118,9 +120,9 @@ namespace MAGTask
         #endregion
 
         #region FSM functions
-        /// Start of the Load state
+        /// Start of the Init state
         /// 
-        private void EnterStateLoad()
+        private void EnterStateInit()
         {
             m_levelData = m_levelService.GetLevelData(LevelLocalDirector.s_levelIndex);
             m_view.ScoreView.InitialiseScores(m_levelData.m_scores);
@@ -142,7 +144,13 @@ namespace MAGTask
 
             // Add a score objective as a default
             RegisterObjective(new ObjectiveData(ObjectiveType.Score, m_levelData.m_scores.GetFirst()), m_levelData.m_objectives.Count);
-
+            m_fsm.ExecuteAction(k_actionNext);
+        }
+        
+        /// Start of the Load state
+        /// 
+        private void EnterStateLoad()
+        {
             // Create the level
             m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerLevelCreation(() =>
             {
@@ -198,12 +206,6 @@ namespace MAGTask
             tileView.m_boardPosition = boardPosition;
             tileView.name = boardPosition.ToString();
             return tileView;
-        }
-
-        /// End of the Load state
-        /// 
-        private void ExitStateLoad()
-        {
         }
 
         /// Start of the Idle state
