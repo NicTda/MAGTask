@@ -800,6 +800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_view: {fileID: 1160828101}
+  m_levelIndex: 1
 --- !u!4 &757035045
 Transform:
   m_ObjectHideFlags: 0
@@ -1420,6 +1421,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fsmAnimator: {fileID: 1160828100}
   BoardTouchArea: {fileID: 1169625967}
+  BoardBacking: {fileID: 354652303}
   m_tilesHolder: {fileID: 2044575707}
   m_scoreView: {fileID: 968208901}
   m_moveText: {fileID: 1133751324}

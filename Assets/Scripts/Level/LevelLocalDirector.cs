@@ -11,10 +11,12 @@ namespace MAGTask
     /// 
     public sealed class LevelLocalDirector : LocalDirector
     {
-        public static int s_levelIndex = 0;
+        public static int s_levelIndex = -1;
 
         [SerializeField]
         private LevelView m_view = null;
+        [SerializeField]
+        private int m_levelIndex = 0;
 
         #region LocalDirector functions
         /// Register local services
@@ -28,6 +30,11 @@ namespace MAGTask
         /// 
         protected override void StartInitialisedState()
         {
+            if(s_levelIndex < 0)
+            {
+                s_levelIndex = m_levelIndex;
+            }
+
             // Create the level controller
             new LevelController(this, m_view);
         }

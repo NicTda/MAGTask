@@ -4,6 +4,7 @@
 
 using CoreFramework;
 using CoreFramework.Json;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace MAGTask
@@ -52,7 +53,14 @@ namespace MAGTask
             var jsonData = data.AsDictionary();
             if(jsonData.ContainsKey(k_keyLevels))
             {
-                m_levels = jsonData[k_keyLevels].AsListOfSerializables<LevelModel>();
+                int index = 0;
+                var levelData = jsonData[k_keyLevels] as IEnumerable;
+                foreach (var value in levelData)
+                {
+                    LevelModel level = value.AsSerializable<LevelModel>();
+                    level.m_index = index++;
+                    m_levels.Add(level);
+                }
             }
 
             if(m_levels.Count == 0)
@@ -106,17 +114,27 @@ namespace MAGTask
         /// @param levelIndex
         ///     The level to unlock
         ///     
-        public void SetLevelUnlocked(int levelIndex)
+        public void UnlockLevel(int levelIndex)
         {
-            SetLevelState(levelIndex, NodeState.Unlocked);
+            var level = GetLevelModel(levelIndex);
+            if(level.m_nodeState == NodeState.Locked)
+            {
+                level.m_nodeState = NodeState.Unlocked;
+                this.Save();
+            }
         }
 
         /// @param levelIndex
         ///     The level to open
         ///     
-        public void SetLevelOpen(int levelIndex)
+        public void OpenLevel(int levelIndex)
         {
-            SetLevelState(levelIndex, NodeState.Open);
+            var level = GetLevelModel(levelIndex);
+            if (level.m_nodeState != NodeState.Open)
+            {
+                m_levels[levelIndex].m_nodeState = NodeState.Open;
+                this.Save();
+            }
         }
 
         /// @param levelIndex
@@ -124,7 +142,7 @@ namespace MAGTask
         /// @param score
         ///     The score to set
         /// 
-        public void SetLevelCompleted(int levelIndex, int score)
+        public void CompleteLevel(int levelIndex, int score)
         {
             var level = GetLevelModel(levelIndex);
             if (level.m_highscore < score)
@@ -151,25 +169,8 @@ namespace MAGTask
         /// 
         public void PlayLevel(int levelIndex)
         {
-            //LevelLocalDirector.s_levelIndex = itemView.LevelIndex;
+            LevelLocalDirector.s_levelIndex = levelIndex;
             m_sceneService.SwitchToScene(SceneIdentifiers.k_level);
-        }
-        #endregion
-
-        #region Private functions
-        /// @param levelIndex
-        ///     The level to update
-        /// @param state
-        ///     The state to set
-        ///     
-        private void SetLevelState(int levelIndex, NodeState state)
-        {
-            var level = GetLevelModel(levelIndex);
-            if (level.m_nodeState != state)
-            {
-                m_levels[levelIndex].m_nodeState = state;
-                this.Save();
-            }
         }
         #endregion
     }

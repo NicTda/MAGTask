@@ -11,7 +11,6 @@ namespace MAGTask
     /// 
     public sealed class LevelModel : ISerializable
     {
-        private const string k_keyIndex = "ID";
         private const string k_keyNodeState = "NS";
         private const string k_keyHighscore = "HS";
 
@@ -24,10 +23,7 @@ namespace MAGTask
         ///
         public object Serialize()
         {
-            var jsonData = new JsonDictionary()
-            {
-                { k_keyIndex, m_index }
-            };
+            var jsonData = new JsonDictionary();
             if (m_nodeState != NodeState.Locked)
             {
                 jsonData.Add(k_keyNodeState, (int)m_nodeState);
@@ -45,10 +41,6 @@ namespace MAGTask
         public void Deserialize(object data)
         {
             var jsonData = data.AsDictionary();
-            if (jsonData.ContainsKey(k_keyIndex))
-            {
-                m_index = jsonData.GetInt(k_keyIndex);
-            }
             if (jsonData.ContainsKey(k_keyNodeState))
             {
                 m_nodeState = (NodeState)jsonData.GetInt(k_keyNodeState);

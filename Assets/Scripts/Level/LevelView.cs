@@ -19,6 +19,7 @@ namespace MAGTask
         public ScoreView ScoreView { get { return m_scoreView; } }
         public Transform TilesHolder { get { return m_tilesHolder; } }
         public Transform BoardTouchArea = null;
+        public SpriteRenderer BoardBacking = null;
 
         [SerializeField]
         private Transform m_tilesHolder = null;

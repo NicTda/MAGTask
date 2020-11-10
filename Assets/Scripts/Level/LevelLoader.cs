@@ -11,6 +11,7 @@ namespace MAGTask
     public sealed class LevelDataLoader : MetadataLoader<LevelData>
     {
         private const string k_jsonMetadataFolderPath = "Metadata/Levels";
+        private const string k_levelFormat = "Level{0}";
 
         #region MetadataLoader functions
         /// Initialisation function
@@ -30,7 +31,7 @@ namespace MAGTask
         /// 
         public LevelData GetLevel(int index)
         {
-            return GetAllItems().Find((data) => data.m_index == index);
+            return GetItem(string.Format(k_levelFormat, index));
         }
         #endregion
     }

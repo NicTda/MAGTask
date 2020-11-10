@@ -110,7 +110,7 @@ namespace MAGTask
         private void ExitStateUnlock()
         {
             // Save the level state
-            m_levelService.SetLevelOpen(LevelModel.m_index);
+            m_levelService.OpenLevel(LevelModel.m_index);
 
             // Particles
             ParticleUtils.SpawnParticles(ParticleIdentifiers.k_starburst, MapNodeView.transform.position);

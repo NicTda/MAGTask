@@ -4,6 +4,7 @@
 
 using CoreFramework;
 using CoreFramework.Json;
+using System;
 using System.Collections.Generic;
 
 namespace MAGTask
@@ -12,6 +13,8 @@ namespace MAGTask
     /// 
     public sealed class LevelData : IMetaDataSerializable
     {
+        public const string k_levelPrefix = "Level";
+
         private const string k_keyType = "Type";
         private const string k_keyTiles = "Tiles";
         private const string k_keyHeight = "Height";
@@ -22,11 +25,11 @@ namespace MAGTask
         private const string k_keyReward = "Reward";
 
         public string m_id { get; set; } = string.Empty;
+        public int m_index { get; private set; } = 0;
         public string m_type { get; private set; } = string.Empty;
         public List<string> m_objectives { get; private set; } = new List<string>();
         public List<int> m_tiles { get; private set; } = new List<int>();
         public List<int> m_scores { get; private set; } = new List<int>();
-        public int m_index { get; private set; } = 0;
         public int m_width { get; private set; } = 5;
         public int m_height { get; private set; } = 5;
         public int m_moves { get; private set; } = 10;
@@ -45,6 +48,14 @@ namespace MAGTask
         /// 
         public void Deserialize(object data)
         {
+            // Get the index from the ID
+            var indexString = m_id.Substring(k_levelPrefix.Length, m_id.Length - k_levelPrefix.Length);
+            if (Int32.TryParse(indexString, out int integer))
+            {
+                m_index = integer;
+            }
+
+            // Deserialize the rest of the data
             var jsonData = data.AsDictionary();
             if (jsonData.ContainsKey(k_keyType))
             {

@@ -36,6 +36,17 @@ namespace MAGTask
 
         private readonly Vector3 k_boardPosBack = Vector3.forward * 5;
         private readonly Vector3 k_boardPosFront = Vector3.back * 5;
+        private readonly List<Vector3> k_validNeighbours = new List<Vector3>()
+        {
+            Vector3.left + Vector3.up,
+            Vector3.left,
+            Vector3.left + Vector3.down,
+            Vector3.up,
+            Vector3.down,
+            Vector3.right + Vector3.up,
+            Vector3.right,
+            Vector3.right + Vector3.down,
+        };
 
         private LevelView m_view = null;
         private LevelData m_levelData = null;
@@ -109,6 +120,7 @@ namespace MAGTask
         {
             m_levelData = m_levelService.GetLevelData(LevelLocalDirector.s_levelIndex);
             m_view.ScoreView.InitialiseScores(m_levelData.m_scores);
+            m_view.BoardBacking.size = new Vector2(m_levelData.m_width + 0.5f, m_levelData.m_height + 0.5f);
 
             // Load level data
             m_tiles.Capacity = m_levelData.m_height * m_levelData.m_width;
@@ -407,10 +419,10 @@ namespace MAGTask
         private void EnterStateWin()
         {
             // Register the level as completed
-            m_levelService.SetLevelCompleted(m_levelData.m_index, m_currentScore);
+            m_levelService.CompleteLevel(m_levelData.m_index, m_currentScore);
 
             // Unlock next level
-            m_levelService.SetLevelUnlocked(m_levelData.m_index + 1);
+            m_levelService.UnlockLevel(m_levelData.m_index + 1);
 
             // Ceremony
 
@@ -568,11 +580,6 @@ namespace MAGTask
                 currentChain.Clear();
                 while (pendingTiles.Count > 0)
                 {
-                    if (boardState == BoardState.Valid)
-                    {
-                        break;
-                    }
-
                     if (activeTile == null)
                     {
                         // Get a random tile to check
@@ -580,19 +587,7 @@ namespace MAGTask
                     }
 
                     // Get its valid neighbours
-                    var validNeighbours = new List<Vector3>()
-                    {
-                        activeTile.m_boardPosition + Vector3.left + Vector3.up,
-                        activeTile.m_boardPosition + Vector3.left,
-                        activeTile.m_boardPosition + Vector3.left + Vector3.down,
-                        activeTile.m_boardPosition + Vector3.up,
-                        activeTile.m_boardPosition + Vector3.down,
-                        activeTile.m_boardPosition + Vector3.right + Vector3.up,
-                        activeTile.m_boardPosition + Vector3.right,
-                        activeTile.m_boardPosition + Vector3.right + Vector3.down,
-                    };
-
-                    var neighbours = pendingTiles.FindAll((view) => validNeighbours.Contains(view.m_boardPosition));
+                    var neighbours = pendingTiles.FindAll((view) => k_validNeighbours.Contains(activeTile.m_boardPosition - view.m_boardPosition));
                     if (neighbours.Count == 0)
                     {
                         // No valid neighbour, we stop that chain
@@ -601,9 +596,8 @@ namespace MAGTask
                     }
                     else if (currentChain.Count + neighbours.Count >= k_minActiveTiles - 1)
                     {
-                        // If there's a valid chain, the board is valid
-                        boardState = BoardState.Valid;
-                        break;
+                        // If there's a valid chain, the board is valid so we can stop
+                        return BoardState.Valid;
                     }
                     else
                     {
