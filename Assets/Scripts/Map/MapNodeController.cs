@@ -27,7 +27,6 @@ namespace MAGTask
 
         private PopupService m_popupService = null;
         private LevelService m_levelService = null;
-        private LevelDataLoader m_levelLoader = null;
 
         #region Public functions
         /// @param localDirector
@@ -42,7 +41,6 @@ namespace MAGTask
         {
             m_popupService = GlobalDirector.Service<PopupService>();
             m_levelService = GlobalDirector.Service<LevelService>();
-            m_levelLoader = GlobalDirector.Service<MetadataService>().GetLoader<LevelData>() as LevelDataLoader;
 
             MapNodeView = view;
             LevelModel = m_levelService.GetLevelModel(MapNodeView.LevelIndex);
@@ -59,7 +57,10 @@ namespace MAGTask
         /// 
         public void TriggerUnlock()
         {
-            m_fsm.ExecuteAction(k_actionUnlock);
+            if(m_levelService.HasLevel(LevelModel.m_index) == true)
+            {
+                m_fsm.ExecuteAction(k_actionUnlock);
+            }
         }
         #endregion
 

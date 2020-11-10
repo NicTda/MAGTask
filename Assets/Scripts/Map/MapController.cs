@@ -112,7 +112,7 @@ namespace MAGTask
             RegisterBackButton();
 
             // TODO TDA: new state for ceremony: complete, then unlock
-            if(m_nodeToUnlock != null && m_nodeToUnlock.LevelModel != null)
+            if(m_nodeToUnlock != null)
             {
                 m_cameraController.FocusOnTargetWithinBounds(m_nodeToUnlock.MapNodeView.transform.position);
                 m_nodeToUnlock.TriggerUnlock();

@@ -85,6 +85,16 @@ namespace MAGTask
 
         #region Public functions
         /// @param levelIndex
+        ///     The index of the level to check
+        ///     
+        /// @return Whether the level data exists
+        /// 
+        public bool HasLevel(int levelIndex)
+        {
+            return m_levelLoader.GetLevel(levelIndex) != null;
+        }
+
+        /// @param levelIndex
         ///     The index of the level to retrieve
         ///     
         /// @return The data of the level

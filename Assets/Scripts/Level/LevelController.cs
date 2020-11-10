@@ -30,6 +30,7 @@ namespace MAGTask
         private const string k_stateLose = "Lose";
 
         private const int k_tileScore = 100;
+        private const int k_bonusScore = 50;
         private const int k_minActiveTiles = 3;
         private const int k_extraMoves = 5;
         private const float k_distanceTiles = 2;
@@ -334,15 +335,16 @@ namespace MAGTask
         private IEnumerator StaggerTilesPop(Action callback)
         {
             // Pop the tiles
-            int popped = 0;
+            int tilePopped = 0;
+            int tileChained = 0;
+            int tileScore = k_tileScore;
             foreach (var tile in m_selectedTiles)
             {
                 // TODO TDA: Add Audio SFX
-                // TODO TDA: Add defined score, and combo score?
-                m_currentScore += k_tileScore;
 
                 // Particle effect and score
-                ParticleUtils.SpawnTextParticles(string.Format(GameTextIdentifiers.k_rewardFormat, k_tileScore), m_view.TilesHolder, tile.m_boardPosition);
+                m_currentScore += tileScore;
+                ParticleUtils.SpawnTextParticles(string.Format(GameTextIdentifiers.k_rewardFormat, tileScore), m_view.TilesHolder, tile.m_boardPosition);
                 ParticleUtils.SpawnParticles(ParticleIdentifiers.k_tilePop, tile.m_boardPosition);
 
                 tile.Pop(() =>
@@ -350,12 +352,19 @@ namespace MAGTask
                     // Tile popped, remove it
                     m_tiles.Remove(tile);
                     tile.gameObject.SetActive(false);
-                    ++popped;
+                    ++tilePopped;
                 });
                 yield return new WaitForSeconds(0.1f);
+
+                // Add bonus score if any
+                ++tileChained;
+                if (tileChained % k_minActiveTiles == 0)
+                {
+                    tileScore += k_bonusScore;
+                }
             }
 
-            while(popped < m_selectedTiles.Count)
+            while(tilePopped < m_selectedTiles.Count)
             {
                 yield return null;
             }
