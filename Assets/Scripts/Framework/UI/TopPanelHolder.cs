@@ -18,7 +18,7 @@ namespace MAGTask
         public string CurrencyID { get { return m_currency; } }
 
         [SerializeField]
-        private string m_currency = OverlayBankIdentifiers.k_currencyCredits;
+        private string m_currency = OverlayBankIdentifiers.k_currencyCoins;
         [SerializeField]
         private Image m_icon = null;
         [SerializeField]

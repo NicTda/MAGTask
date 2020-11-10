@@ -16,7 +16,7 @@ namespace MAGTask
         static LocalisationService m_cachedLocalisationService = null;
         private static readonly List<string> k_currencies = new List<string>()
         {
-            OverlayBankIdentifiers.k_currencyCredits,
+            OverlayBankIdentifiers.k_currencyCoins,
             OverlayBankIdentifiers.k_currencyPremium,
         };
 
@@ -36,6 +36,22 @@ namespace MAGTask
         public const string k_exitGame = "ExitGame";
         public const string k_costSuccess = "CostSuccess";
         public const string k_costFail = "CostFail";
+
+        /// Level keys
+        /// 
+        public const string k_levelDisplay = "Level {0}";
+
+        /// Objective keys
+        /// 
+        /// {0} -> Target or Value
+        /// {1} -> Amount
+        /// 
+        public static readonly Dictionary<ObjectiveType, string> k_objectives = new Dictionary<ObjectiveType, string>()
+        {
+            { ObjectiveType.Score, "Score {1} points" },
+            { ObjectiveType.Colour, "Match {1} <sprite name=\"{0}\">" },
+            { ObjectiveType.Chain, "Chain {0} blocks" },
+        };
 
         #region Public functions
         /// @param currencyItem

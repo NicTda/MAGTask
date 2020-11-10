@@ -33,6 +33,7 @@ namespace MAGTask
         private const int k_bonusScore = 50;
         private const int k_minActiveTiles = 3;
         private const int k_extraMoves = 5;
+        private const float k_boardPadding = 1.25f;
         private const float k_distanceTiles = 2;
 
         private readonly Vector3 k_boardPosBack = Vector3.forward * 5;
@@ -55,6 +56,7 @@ namespace MAGTask
         private TileFactory m_tileFactory = null;
         private LevelService m_levelService = null;
         private PopupService m_popupService = null;
+        private ObjectiveService m_objectiveService = null;
 
         private List<TileView> m_tiles = new List<TileView>();
         private List<TileView> m_selectedTiles = new List<TileView>();
@@ -73,13 +75,14 @@ namespace MAGTask
         ///     The camera controller
         /// 
         public LevelController(LocalDirector localDirector, LevelView view)
-            : base(localDirector, view, SceneIdentifiers.k_main)
+            : base(localDirector, view, SceneIdentifiers.k_map)
         {
             m_view = view;
 
             m_tileFactory = localDirector.GetFactory<TileFactory>();
             m_levelService = GlobalDirector.Service<LevelService>();
             m_popupService = GlobalDirector.Service<PopupService>();
+            m_objectiveService = localDirector.GetService<ObjectiveService>();
 
             m_audioService.PlayMusicFadeCross(AudioIdentifiers.k_musicLevel);
 
@@ -98,7 +101,7 @@ namespace MAGTask
         {
             m_audioService.PlaySFX(AudioIdentifiers.k_sfxButtonBack);
             var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameQuestionProminent) as PopupYesNoView;
-            popupView.SetBodyText("Do you want to go back to the main menu?");
+            popupView.SetBodyText("Do you want to go back to the level selection?");
             popupView.OnPopupConfirmed += () =>
             {
                 base.OnBackButtonRequest();
@@ -121,14 +124,25 @@ namespace MAGTask
         {
             m_levelData = m_levelService.GetLevelData(LevelLocalDirector.s_levelIndex);
             m_view.ScoreView.InitialiseScores(m_levelData.m_scores);
-            m_view.BoardBacking.size = new Vector2(m_levelData.m_width + 0.5f, m_levelData.m_height + 0.5f);
+            m_view.BoardBacking.size = new Vector2(m_levelData.m_width + k_boardPadding, m_levelData.m_height + k_boardPadding);
+            m_view.SetLevelName(string.Format(GameTextIdentifiers.k_levelDisplay, m_levelData.m_index));
 
             // Load level data
             m_tiles.Capacity = m_levelData.m_height * m_levelData.m_width;
             m_selectedTiles.Capacity = m_levelData.m_height * m_levelData.m_width;
             m_spawnHeight = m_levelData.m_height * 0.5f + 1.0f;
             SetMovesLeft(m_levelData.m_moves);
-            
+
+            // Initialise the objectives
+            for (int index = 0; index < m_levelData.m_objectives.Count; ++index)
+            {
+                var objectiveData = m_levelData.m_objectives[index];
+                RegisterObjective(objectiveData, index);
+            }
+
+            // Add a score objective as a default
+            RegisterObjective(new ObjectiveData(ObjectiveType.Score, m_levelData.m_scores.GetFirst()), m_levelData.m_objectives.Count);
+
             // Create the level
             m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerLevelCreation(() =>
             {
@@ -179,7 +193,7 @@ namespace MAGTask
             spawnPosition.y = m_spawnHeight;
 
             // Choose a random tile colour
-            TileColour randomColour = (TileColour)m_levelData.m_tiles.GetRandom();
+            TileColour randomColour = m_levelData.m_tiles.GetRandom();
             var tileView = m_tileFactory.CreateTile(randomColour, m_view.TilesHolder, spawnPosition);
             tileView.m_boardPosition = boardPosition;
             tileView.name = boardPosition.ToString();
@@ -292,15 +306,12 @@ namespace MAGTask
         /// 
         private void EnterStateResolve()
         {
+            // Update moves
+            SetMovesLeft(m_movesLeft - 1);
+
             // Pop the tiles
             m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerTilesPop(() =>
             {
-                // Update score
-                m_view.ScoreView.SetScore(m_currentScore);
-
-                // Update moves
-                SetMovesLeft(m_movesLeft - 1);
-
                 m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerReplaceTiles(() =>
                 {
                     if (m_movesLeft > 0)
@@ -336,7 +347,7 @@ namespace MAGTask
         {
             // Pop the tiles
             int tilePopped = 0;
-            int tileChained = 0;
+            int tilesChained = 0;
             int tileScore = k_tileScore;
             foreach (var tile in m_selectedTiles)
             {
@@ -347,27 +358,38 @@ namespace MAGTask
                 ParticleUtils.SpawnTextParticles(string.Format(GameTextIdentifiers.k_rewardFormat, tileScore), m_view.TilesHolder, tile.m_boardPosition);
                 ParticleUtils.SpawnParticles(ParticleIdentifiers.k_tilePop, tile.m_boardPosition);
 
+                // Log the score event
+                m_objectiveService.LogEvent(ObjectiveType.Score, tileScore);
+
                 tile.Pop(() =>
                 {
                     // Tile popped, remove it
                     m_tiles.Remove(tile);
                     tile.gameObject.SetActive(false);
                     ++tilePopped;
+
+                    // Log the popped tile event
+                    m_objectiveService.LogEvent(ObjectiveType.Colour, tile.m_tileColour.ToString());
                 });
+
                 yield return new WaitForSeconds(0.1f);
 
                 // Add bonus score if any
-                ++tileChained;
-                if (tileChained % k_minActiveTiles == 0)
+                ++tilesChained;
+                if (tilesChained % k_minActiveTiles == 0)
                 {
                     tileScore += k_bonusScore;
                 }
             }
 
-            while(tilePopped < m_selectedTiles.Count)
+            while (tilePopped < m_selectedTiles.Count)
             {
                 yield return null;
             }
+
+            // Log the chain event
+            m_objectiveService.LogEventWithValue(ObjectiveType.Chain, tilesChained);
+
             callback.SafeInvoke();
         }
 
@@ -376,6 +398,13 @@ namespace MAGTask
         ///     
         private IEnumerator StaggerReplaceTiles(Action callback)
         {
+            // Update score
+            bool scoreUpdated = false;
+            m_view.ScoreView.SetScore(m_currentScore, () =>
+            {
+                scoreUpdated = true;
+            });
+
             // Add new tiles
             var tilesToAdd = new List<TileView>(m_selectedTiles.Count);
             int appeared = 0;
@@ -408,7 +437,7 @@ namespace MAGTask
                 yield return null;
             }
 
-            while (appeared < m_selectedTiles.Count)
+            while (scoreUpdated == false || appeared < m_selectedTiles.Count)
             {
                 yield return null;
             }
@@ -562,6 +591,17 @@ namespace MAGTask
             m_view.SetMovesLeft(m_movesLeft.ToString());
         }
 
+        /// @param objectiveData
+        ///     The data of the objective
+        /// @param index
+        ///     The index of the objective
+        /// 
+        private void RegisterObjective(ObjectiveData objectiveData, int index)
+        {
+            var model = m_objectiveService.AddObjective(objectiveData);
+            m_view.ShowObjective(index, model);
+        }
+
         /// @return Whether the current board has at least a valid move
         /// 
         private BoardState ValidateBoard()
@@ -572,9 +612,8 @@ namespace MAGTask
             TileView activeTile = null;
 
             // Check each colour on the board
-            foreach (var colourID in m_levelData.m_tiles)
+            foreach (var tileColour in m_levelData.m_tiles)
             {
-                var tileColour = (TileColour)colourID;
                 pendingTiles = m_tiles.FindAll((view) => view.m_tileColour == tileColour);
                 if (pendingTiles.Count < k_minActiveTiles)
                 {
@@ -628,16 +667,18 @@ namespace MAGTask
         /// 
         private bool IsLevelCompleted()
         {
-            // Check minimum score
-            return m_currentScore >= m_levelData.m_scores.GetFirst();
+            // Check all objectives
+            return m_objectiveService.AreObjectivesComplete();
         }
 
         /// @return Whether the level's objectives are done
         /// 
         private bool IsLevelCompletedEarly()
         {
-            // Check maximum score
-            return m_currentScore >= m_levelData.m_scores.GetLast();
+            // Check with maximum score
+            bool objectiveComplete = m_objectiveService.AreObjectivesComplete();
+            bool scoreAchieved = m_currentScore >= m_levelData.m_scores.GetLast();
+            return objectiveComplete && scoreAchieved;
         }
         #endregion
     }

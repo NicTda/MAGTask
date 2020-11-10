@@ -31,7 +31,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 0dc2f15a08d3b504099ab1c7ce1a14c8, type: 3}
-    totalSpriteSurfaceArea: 1173056
+    totalSpriteSurfaceArea: 1180926
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -49,6 +49,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: bb18a003d115dba4fa8491a4eb3ed9e8, type: 3}
   - {fileID: 21300000, guid: 92f6ac14acddfea4f83aefa329280e0e, type: 3}
   - {fileID: 21300000, guid: dc56d7342edc0d4408078aed26ca6986, type: 3}
+  - {fileID: 21300000, guid: 86f886949da4e2745a6e802a3ee1f3d2, type: 3}
   - {fileID: 21300000, guid: fd3e4cd456badda4c8d47a7821c08e03, type: 3}
   - {fileID: 21300000, guid: 2a1e45f49da8168409d1f7db7891b54c, type: 3}
   - {fileID: 21300000, guid: a48824559abc24c4783d68f10714d045, type: 3}
@@ -76,10 +77,13 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9880dbcb60faeef4dafc64c7dd98764e, type: 3}
   - {fileID: 21300000, guid: f77bdedb28c2f9747896d84e70695b19, type: 3}
   - {fileID: 21300000, guid: 9d25953dd3d1eb64baf55226b4b6dae0, type: 3}
+  - {fileID: 21300000, guid: c3b42fad66cf76a469c5d0842b74587b, type: 3}
   - {fileID: 21300000, guid: 6d6d230e753a358469719f3e6005dc28, type: 3}
+  - {fileID: 21300000, guid: ab10526efb4cb7f42abb7b830b1e3c6b, type: 3}
   - {fileID: 21300000, guid: 7300979e2298a2041bd0acb1a827388a, type: 3}
   - {fileID: 21300000, guid: 4cd9f8be8f32b42418535476700fcda4, type: 3}
   - {fileID: 21300000, guid: 4c7e59be711945c4da73f43ac9551668, type: 3}
+  - {fileID: 21300000, guid: 3d4ef13f83c26854d82295ea671fc5b7, type: 3}
   - {fileID: 21300000, guid: 02c3747fba0916f4e8cc403dcd46672a, type: 3}
   - {fileID: 21300000, guid: 7b9654bfa268ac6459034233c991837d, type: 3}
   - {fileID: 21300000, guid: 635564bf3ddc7864ba136cf5c11a6c0d, type: 3}
@@ -98,6 +102,7 @@ SpriteAtlas:
   - PanelGold
   - SliderVertical
   - PanelGreen
+  - FrameYellow
   - LevelGrid
   - CrossG
   - Help
@@ -125,10 +130,13 @@ SpriteAtlas:
   - Locked
   - PanelHudPlain_Flash
   - PanelHudYellow
+  - IconTick
   - staroff
+  - FrameBlue
   - Music
   - Refresh
   - ShopG
+  - FramePink
   - PanelRed
   - BarBack
   - OptionsG

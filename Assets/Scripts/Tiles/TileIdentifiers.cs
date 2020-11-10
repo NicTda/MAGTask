@@ -16,13 +16,4 @@ namespace MAGTask
         Red = 5,
         Grey = 6,
     }
-
-    /// The possible states of a board validation
-    /// 
-    public enum BoardState
-    {
-        Valid = 0,
-        Reshuffle = 1,
-        Recreate = 2,
-    }
 }

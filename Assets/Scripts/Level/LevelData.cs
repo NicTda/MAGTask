@@ -27,8 +27,8 @@ namespace MAGTask
         public string m_id { get; set; } = string.Empty;
         public int m_index { get; private set; } = 0;
         public string m_type { get; private set; } = string.Empty;
-        public List<string> m_objectives { get; private set; } = new List<string>();
-        public List<int> m_tiles { get; private set; } = new List<int>();
+        public List<ObjectiveData> m_objectives { get; private set; } = new List<ObjectiveData>();
+        public List<TileColour> m_tiles { get; private set; } = new List<TileColour>();
         public List<int> m_scores { get; private set; } = new List<int>();
         public int m_width { get; private set; } = 5;
         public int m_height { get; private set; } = 5;
@@ -79,11 +79,11 @@ namespace MAGTask
             }
             if (jsonData.ContainsKey(k_keyTiles))
             {
-                m_tiles = jsonData.GetValue(k_keyTiles).AsList<int>();
+                m_tiles = jsonData.GetValue(k_keyTiles).AsEnumList<TileColour>();
             }
             if (jsonData.ContainsKey(k_keyObjectives))
             {
-                m_objectives = jsonData.GetValue(k_keyObjectives).AsList<string>();
+                m_objectives = jsonData.GetValue(k_keyObjectives).AsListOfSerializables<ObjectiveData>();
             }
             if (jsonData.ContainsKey(k_keyReward))
             {

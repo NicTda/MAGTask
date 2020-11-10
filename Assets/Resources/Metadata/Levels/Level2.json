@@ -1,0 +1,8 @@
+{
+	"Type":"Simple",
+	"Height":6,
+	"Width":6,
+	"Tiles":["Blue", "Yellow", "Green", "Pink", "Grey"],
+	"Moves":10,
+	"Scores":[2000,3000,4000]
+}

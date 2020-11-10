@@ -10,7 +10,7 @@ namespace CoreFramework
     {
         /// Currencies
         /// 
-        public const string k_currencyCredits = "credits";
+        public const string k_currencyCoins = "coins";
         public const string k_currencyPremium = "premium";
     }
 }

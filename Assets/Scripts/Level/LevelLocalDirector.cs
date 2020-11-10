@@ -24,6 +24,7 @@ namespace MAGTask
         protected override void OnRegisteringLocalServices()
         {
             m_factorySupplier.RegisterFactory<TileFactory>();
+            m_serviceSupplier.RegisterService<ObjectiveService>();
         }
 
         /// Entry point for the initialised state

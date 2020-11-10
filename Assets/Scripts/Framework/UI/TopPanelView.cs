@@ -350,7 +350,7 @@ namespace MAGTask
         {
             switch (currencyID)
             {
-                case OverlayBankIdentifiers.k_currencyCredits:
+                case OverlayBankIdentifiers.k_currencyCoins:
                 {
                     //m_audioService.PlaySFXRandom(AudioIdentifiers.k_randomXP);
                     break;
