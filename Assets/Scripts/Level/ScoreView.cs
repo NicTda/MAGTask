@@ -74,6 +74,7 @@ namespace MAGTask
         /// 
         private IEnumerator StaggerStarProgress(int newScore, Action callback = null)
         {
+            int lastThreshold = 0;
             for (int index = 0; index < m_scores.Count; ++index)
             {
                 if(m_starsProgress[index].GetProgress() < 1.0f)
@@ -81,7 +82,7 @@ namespace MAGTask
                     // Set the progress of that star
                     bool effectDone = false;
                     bool shouldContinue = false;
-                    float progress = (float)newScore / m_scores[index];
+                    float progress = (float)(newScore - lastThreshold ) / (m_scores[index] - lastThreshold);
                     m_starsProgress[index].TweenToProgress(progress, 1.0f, 0.0f, () =>
                     {
                         effectDone = true;
@@ -97,6 +98,7 @@ namespace MAGTask
                     {
                         yield return null;
                     }
+                    lastThreshold = m_scores[index];
 
                     if (shouldContinue == false)
                     {
