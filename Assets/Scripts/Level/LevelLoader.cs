@@ -60,6 +60,12 @@ namespace MAGTask
 #if UNITY_EDITOR
             UnityEditor.AssetDatabase.Refresh();
 #endif
+
+            // Add the level to the loader if needed
+            if(HasItem(levelID) == false)
+            {
+                AddItem(levelData);
+            }
         }
         #endregion
     }

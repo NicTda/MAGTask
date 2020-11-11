@@ -1,0 +1,1 @@
+{"Width":6,"Height":6,"Moves":15,"Tiles":["Blue","Yellow","Green","Pink","Red","Grey"],"Scores":[10000,17500,25000],"Objectives":[{"Type":"Chain","Value":6,"Amount":1},{"Type":"Colour","Target":"Red","Amount":35}]}

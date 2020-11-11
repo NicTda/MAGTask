@@ -1,8 +1,1 @@
-{
-	"Type":"Simple",
-	"Height":6,
-	"Width":6,
-	"Tiles":["Blue", "Yellow", "Green", "Pink"],
-	"Moves":10,
-	"Scores":[1000,2000,3000]
-}
+{"Width":4,"Height":4,"Moves":10,"Tiles":["Blue","Yellow","Green"],"Scores":[1000,2000,3000],"Objectives":[{"Type":"Colour","Target":"Blue","Amount":10},{"Type":"Colour","Target":"Green","Amount":10}]}

@@ -1,16 +1,1 @@
-{
-	"Type":"Simple",
-	"Height":5,
-	"Width":5,
-	"Tiles":["Blue", "Yellow", "Green"],
-	"Moves":10,
-	"Scores":[500,1000,1500],
-	"Objectives":
-	[
-		{
-			"Type":"Colour",
-			"Target":"Blue",
-			"Amount":10
-		}
-	]
-}
+{"Width":3,"Height":3,"Moves":10,"Tiles":["Blue","Yellow"],"Scores":[500,1000,1500],"Objectives":[{"Type":"Colour","Target":"Blue","Amount":5},{"Type":"Colour","Target":"Yellow","Amount":5}]}

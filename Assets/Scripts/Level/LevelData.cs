@@ -119,10 +119,6 @@ namespace MAGTask
             {
                 m_objectives = jsonData.GetValue(k_keyObjectives).AsListOfSerializables<ObjectiveData>();
             }
-            while(m_objectives.Count < 2)
-            {
-                m_objectives.Add(new ObjectiveData());
-            }
         }
         #endregion
     }

@@ -1,0 +1,1 @@
+{"Width":5,"Height":5,"Moves":12,"Tiles":["Blue","Green","Pink","Yellow"],"Scores":[3000,5000,7500],"Objectives":[{"Type":"Colour","Target":"Pink","Amount":20},{"Type":"Colour","Target":"Blue","Amount":20}]}

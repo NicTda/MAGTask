@@ -343,6 +343,10 @@ namespace MAGTask
                     m_tileToggles[tile].SetOn(enabled);
                 }
             }
+            while (levelData.m_objectives.Count < 2)
+            {
+                levelData.m_objectives.Add(new ObjectiveData());
+            }
             for (int index = 0; index < levelData.m_objectives.Count; ++index)
             {
                 m_view.SetObjective(index, levelData.m_objectives[index]);

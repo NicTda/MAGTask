@@ -1,8 +1,1 @@
-{
-	"Type":"Simple",
-	"Height":6,
-	"Width":6,
-	"Tiles":["Blue", "Yellow", "Green", "Pink", "Grey"],
-	"Moves":10,
-	"Scores":[2000,3000,4000]
-}
+{"Width":5,"Height":5,"Moves":10,"Tiles":["Blue","Yellow","Green"],"Scores":[2000,3000,5000],"Objectives":[{"Type":"Colour","Target":"Yellow","Amount":20},{"Type":"Chain","Value":4,"Amount":2}]}
