@@ -15,12 +15,18 @@ namespace MAGTask
         private const string k_animAppear = "Appear";
         private const string k_animBounce = "Bounce";
         private const string k_animPop = "Pop";
-        private const string k_animSelected = "Selected";
+
+        private const string k_stateNone = "none";
+        private const string k_stateSelected = "selected";
 
         [SerializeField]
         private Animator m_animator = null;
         [SerializeField]
-        private GameObject m_selected = null;
+        private StateComponent m_stateComponent = null;
+        [SerializeField]
+        private GameObject m_linkHolder = null;
+        [SerializeField]
+        private SpriteRenderer m_linkSprite = null;
 
         #region Public functions
         /// Called when the tile should appear
@@ -35,7 +41,7 @@ namespace MAGTask
         /// 
         public void Pop(Action callback = null)
         {
-            m_selected.SafeSetActive(false);
+            m_stateComponent.SafeState(k_stateNone);
             m_animator.PlayAnimation(k_animPop, callback);
         }
 
@@ -46,12 +52,24 @@ namespace MAGTask
             m_animator.Play(k_animBounce);
         }
 
-        /// Called when the tile is selected
+        /// @param linkPosition
+        ///     The position of the linked tile
         /// 
-        public void Select()
+        public void Select(Vector3 linkPosition)
         {
             Bounce();
-            m_selected.SafeSetActive(true);
+            m_stateComponent.SafeState(k_stateSelected);
+            m_linkHolder.SafeSetActive(false);
+
+            var distance = Vector3.Distance(transform.position, linkPosition);
+            if (distance != 0.0f)
+            {
+                // Update the link
+                m_linkHolder.SafeSetActive(true);
+                var angle = Vector3.SignedAngle(Vector3.right, linkPosition - transform.position, Vector3.back);
+                m_linkSprite.transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
+                m_linkSprite.size = new Vector2(distance, m_linkSprite.size.y);
+            }
         }
 
         /// Called when the tile is deselected
@@ -59,7 +77,8 @@ namespace MAGTask
         public void Deselect()
         {
             Bounce();
-            m_selected.SafeSetActive(false);
+            m_stateComponent.SafeState(k_stateNone);
+            m_linkHolder.SafeSetActive(false);
         }
         #endregion
     }

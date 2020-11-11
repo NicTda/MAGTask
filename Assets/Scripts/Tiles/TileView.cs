@@ -72,11 +72,12 @@ namespace MAGTask
             m_tileItem.Pop(callback);
         }
 
-        /// Called when the tile is selected
+        /// @param linkPosition
+        ///     The position of the linked tile
         /// 
-        public void Select()
+        public void Select(Vector3 linkPosition)
         {
-            m_tileItem.Select();
+            m_tileItem.Select(linkPosition);
         }
 
         /// Called when the tile is deselected

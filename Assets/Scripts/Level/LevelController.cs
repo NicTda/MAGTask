@@ -204,7 +204,6 @@ namespace MAGTask
             TileColour randomColour = m_levelData.m_tiles.GetRandom();
             var tileView = m_tileFactory.CreateTile(randomColour, m_view.TilesHolder, spawnPosition);
             tileView.m_boardPosition = boardPosition;
-            tileView.name = boardPosition.ToString();
             return tileView;
         }
 
@@ -529,7 +528,7 @@ namespace MAGTask
             if (m_selectedTiles.Count == 0)
             {
                 // Add the first tile to the selected list
-                SelectTile(tile);
+                SelectTile(tile, tile.TileItemHolder.position);
             }
             else
             {
@@ -549,10 +548,10 @@ namespace MAGTask
                 else if(tile.m_tileColour == lastTile.m_tileColour)
                 {
                     // The tile type is valid, check if they're neighbours
-                    var distance = (lastTile.transform.position - tile.transform.position).sqrMagnitude;
+                    var distance = (lastTile.m_boardPosition - tile.m_boardPosition).sqrMagnitude;
                     if(distance <= k_distanceTiles)
                     {
-                        SelectTile(tile);
+                        SelectTile(tile, lastTile.TileItemHolder.position);
                     }
                 }
             }
@@ -560,10 +559,12 @@ namespace MAGTask
 
         /// @param tile
         ///     The tile exited
+        /// @param linkPosition
+        ///     The position of the linked tile
         /// 
-        private void SelectTile(TileView tile)
+        private void SelectTile(TileView tile, Vector3 linkPosition)
         {
-            tile.Select();
+            tile.Select(linkPosition);
             m_selectedTiles.Add(tile);
         }
 

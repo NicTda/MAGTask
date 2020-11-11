@@ -53,7 +53,7 @@ namespace MAGTask
         public TileView CreateTile(TileColour colour, Transform parent, Vector3 position)
         {
             // Create the tile holder
-            var tileObject = ResourceUtils.LoadAndInstantiateGameObject(k_tilePrefabPath, parent);
+            var tileObject = ResourceUtils.LoadAndInstantiateGameObject(k_tilePrefabPath, parent, colour.ToString());
             var tileView = tileObject.GetComponent<TileView>();
             tileObject.transform.position = position;
 
