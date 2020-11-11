@@ -18,5 +18,6 @@ namespace MAGTask
         /// Linking game
         /// 
         public static readonly string k_tilePop = "Particles/TilePop";
+        public static readonly string k_tilePopNegative = "Particles/TilePopNegative";
     }
 }

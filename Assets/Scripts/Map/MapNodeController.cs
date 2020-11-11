@@ -46,6 +46,7 @@ namespace MAGTask
 
             MapNodeView = view;
             LevelModel = m_levelService.GetLevelModel(MapNodeView.LevelIndex);
+            MapNodeView.SetName(MapNodeView.LevelIndex.ToString());
 
             m_fsm.RegisterStateCallback(k_stateInit, EnterStateInit, null, null);
             m_fsm.RegisterStateCallback(k_stateIdle, EnterStateIdle, null, ExitStateIdle);

@@ -26,6 +26,7 @@ namespace MAGTask
         public const string k_currencyFormat = "<sprite name=\"{0}\">";
         public const string k_costFormat = "{0} {1}";
         public const string k_rewardFormat = "+{0}";
+        public const string k_penaltyFormat = "{0}";
         public const string k_pluralFormat = "{0}_plural";
 
         /// Game keys

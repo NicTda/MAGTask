@@ -153,9 +153,9 @@ namespace MAGTask
                     m_amount = m_levelData.m_scores.GetFirst()
 
                 }, m_levelData.m_objectives.Count);
-
-                m_fsm.ExecuteAction(k_actionNext);
             }
+
+            m_fsm.ExecuteAction(k_actionNext);
         }
         
         /// Start of the Load state
@@ -361,13 +361,29 @@ namespace MAGTask
             int tileScore = k_tileScore;
             foreach (var tile in m_selectedTiles)
             {
+                string audioSFX = AudioIdentifiers.k_sfxPopPositive;
+                string particleID = ParticleIdentifiers.k_tilePop;
+                string textFormat = GameTextIdentifiers.k_rewardFormat;
+                Color textColour = Color.white;
+
+                // Special tiles
+                if (tile.m_tileColour == TileColour.Grey)
+                {
+                    audioSFX = AudioIdentifiers.k_sfxPopNegative;
+                    particleID = ParticleIdentifiers.k_tilePopNegative;
+                    textFormat = GameTextIdentifiers.k_penaltyFormat;
+                    textColour = Color.red;
+                    tileScore = -k_tileScore;
+                }
+
                 // Audio SFX
-                m_audioService.PlaySFX(AudioIdentifiers.k_sfxPopPositive);
+                m_audioService.PlaySFX(audioSFX);
 
                 // Particle effect and score
                 m_currentScore += tileScore;
-                ParticleUtils.SpawnTextParticles(string.Format(GameTextIdentifiers.k_rewardFormat, tileScore), m_view.TilesHolder, tile.m_boardPosition);
-                ParticleUtils.SpawnParticles(ParticleIdentifiers.k_tilePop, tile.m_boardPosition);
+                var textParticle = ParticleUtils.SpawnTextParticles(string.Format(textFormat, tileScore), m_view.TilesHolder, tile.m_boardPosition);
+                textParticle.SetColour(textColour);
+                ParticleUtils.SpawnParticles(particleID, tile.m_boardPosition);
 
                 // Log the score event
                 m_objectiveService.LogEvent(ObjectiveType.Score, tileScore);
@@ -387,7 +403,7 @@ namespace MAGTask
 
                 // Add bonus score if any
                 ++tilesChained;
-                if (tilesChained % k_minActiveTiles == 0)
+                if (tileScore > 0 && tilesChained % k_minActiveTiles == 0)
                 {
                     tileScore += k_bonusScore;
                 }
