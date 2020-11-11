@@ -103,7 +103,7 @@ namespace MAGTask
         {
             m_audioService.PlaySFX(AudioIdentifiers.k_sfxButtonBack);
             var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameQuestionProminent) as PopupYesNoView;
-            popupView.SetBodyText("Do you want to go back to the level selection?");
+            popupView.SetBodyText(GameTextIdentifiers.k_levelExit);
             popupView.OnPopupConfirmed += () =>
             {
                 base.OnBackButtonRequest();
@@ -263,6 +263,7 @@ namespace MAGTask
                     tile.Deselect();
                 }
                 m_selectedTiles.Clear();
+                m_audioService.PlaySFX(AudioIdentifiers.k_sfxTileDeselect);
             }
         }
 
@@ -315,17 +316,14 @@ namespace MAGTask
             {
                 m_coroutine = GlobalDirector.ExecuteCoroutine(StaggerReplaceTiles(() =>
                 {
-                    if (m_movesLeft > 0)
+                    if(IsLevelCompleted() == true)
                     {
-                        if (IsLevelCompletedEarly() == true)
-                        {
-                            // Early success
-                            m_fsm.ExecuteAction(k_actionWin);
-                        }
-                        else
-                        {
-                            m_fsm.ExecuteAction(k_actionIdle);
-                        }
+                        // Level success
+                        m_fsm.ExecuteAction(k_actionWin);
+                    }
+                    else if (m_movesLeft > 0)
+                    {
+                        m_fsm.ExecuteAction(k_actionIdle);
                     }
                     else if(IsLevelCompleted() == true)
                     {
@@ -352,7 +350,8 @@ namespace MAGTask
             int tileScore = k_tileScore;
             foreach (var tile in m_selectedTiles)
             {
-                // TODO TDA: Add Audio SFX
+                // Audio SFX
+                m_audioService.PlaySFX(AudioIdentifiers.k_sfxPopPositive);
 
                 // Particle effect and score
                 m_currentScore += tileScore;
@@ -463,13 +462,10 @@ namespace MAGTask
             // Unlock next level
             m_levelService.UnlockLevel(m_levelData.m_index + 1);
 
-            // Ceremony
-
-            // Reward
-
             // Next level or back to map
             var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameInfo);
-            popupView.SetBodyText("Well done! Level {0} completed!", m_levelData.m_index);
+            popupView.SetPresentSFX(AudioIdentifiers.k_sfxLevelComplete);
+            popupView.SetBodyText(GameTextIdentifiers.k_levelWinBody, m_levelData.m_index);
             popupView.OnPopupDismissed += (popup) =>
             {
                 // TODO TDA: home, retry, next
@@ -483,7 +479,8 @@ namespace MAGTask
         {
             // Continue?
             var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameQuestion) as PopupYesNoView;
-            popupView.SetBodyText("Out of moves! Do you want to continue playing by adding {0} moves?", k_extraMoves);
+            popupView.SetPresentSFX(AudioIdentifiers.k_sfxLevelFail);
+            popupView.SetBodyText(GameTextIdentifiers.k_levelLostRetry, k_extraMoves);
             popupView.OnPopupConfirmed += () =>
             {
                 SetMovesLeft(k_extraMoves);
@@ -505,7 +502,6 @@ namespace MAGTask
             foreach(var tile in m_tiles)
             {
                 tile.OnTouchEnter += OnTileEntered;
-                tile.OnTouchExit += OnTileExited;
             }
         }
 
@@ -516,7 +512,6 @@ namespace MAGTask
             foreach (var tile in m_tiles)
             {
                 tile.OnTouchEnter -= OnTileEntered;
-                tile.OnTouchExit -= OnTileExited;
             }
         }
 
@@ -541,8 +536,7 @@ namespace MAGTask
                     // Cut the last tile if the entered tile is n-1 (soft cancel)
                     if (m_selectedTiles.Count > 1 && tile == m_selectedTiles[lastIndex - 1])
                     {
-                        lastTile.Deselect();
-                        m_selectedTiles.RemoveAt(lastIndex);
+                        DeselectTile(lastTile);
                     }
                 }
                 else if(tile.m_tileColour == lastTile.m_tileColour)
@@ -564,6 +558,9 @@ namespace MAGTask
         /// 
         private void SelectTile(TileView tile, Vector3 linkPosition)
         {
+            // Audio SFX
+            m_audioService.PlaySFX(AudioIdentifiers.k_sfxTileSelect);
+
             tile.Select(linkPosition);
             m_selectedTiles.Add(tile);
         }
@@ -573,16 +570,11 @@ namespace MAGTask
         /// 
         private void DeselectTile(TileView tile)
         {
+            // Audio SFX
+            m_audioService.PlaySFX(AudioIdentifiers.k_sfxTileDeselect);
+
             tile.Deselect();
             m_selectedTiles.Remove(tile);
-        }
-
-        /// @param tile
-        ///     The tile exited
-        /// 
-        private void OnTileExited(TileView tile)
-        {
-            // TODO TDA: do a bounce
         }
 
         /// @param moves
@@ -602,7 +594,16 @@ namespace MAGTask
         private void RegisterObjective(ObjectiveData objectiveData, int index)
         {
             var model = m_objectiveService.AddObjective(objectiveData);
+            model.OnCompleted += OnObjectiveCompleted;
             m_view.ShowObjective(index, model);
+        }
+
+        /// Called when an objective completed
+        /// 
+        private void OnObjectiveCompleted()
+        {
+            // Audio SFX
+            m_audioService.PlaySFX(AudioIdentifiers.k_sfxObjectiveComplete);
         }
 
         /// @return Whether the current board has at least a valid move
@@ -672,16 +673,6 @@ namespace MAGTask
         {
             // Check all objectives
             return m_objectiveService.AreObjectivesComplete();
-        }
-
-        /// @return Whether the level's objectives are done
-        /// 
-        private bool IsLevelCompletedEarly()
-        {
-            // Check with maximum score
-            bool objectiveComplete = m_objectiveService.AreObjectivesComplete();
-            bool scoreAchieved = m_currentScore >= m_levelData.m_scores.GetLast();
-            return objectiveComplete && scoreAchieved;
         }
         #endregion
     }

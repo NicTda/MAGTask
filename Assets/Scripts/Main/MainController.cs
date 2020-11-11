@@ -57,6 +57,7 @@ namespace MAGTask
         /// 
         private void OnPlayRequested()
         {
+            m_audioService.PlaySFX(AudioIdentifiers.k_sfxButtonPositive);
             m_sceneService.SwitchToScene(SceneIdentifiers.k_map);
         }
 

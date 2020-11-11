@@ -25,6 +25,7 @@ namespace MAGTask
         public MapNodeView MapNodeView { get; private set; } = null;
         public LevelModel LevelModel { get; private set; } = null;
 
+        private AudioService m_audioService = null;
         private PopupService m_popupService = null;
         private LevelService m_levelService = null;
 
@@ -39,6 +40,7 @@ namespace MAGTask
         public MapNodeController(LocalDirector localDirector, MapNodeView view)
             : base(localDirector, view)
         {
+            m_audioService = GlobalDirector.Service<AudioService>();
             m_popupService = GlobalDirector.Service<PopupService>();
             m_levelService = GlobalDirector.Service<LevelService>();
 
@@ -95,8 +97,9 @@ namespace MAGTask
         private void OnLockedTapped()
         {
             // Open a teaser popup
+            m_audioService.PlaySFX(AudioIdentifiers.k_sfxButtonNeutral);
             var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameInfo);
-            popupView.SetBodyText("This level is not available just yet!");
+            popupView.SetBodyText(GameTextIdentifiers.k_mapLocked);
         }
 
         /// End of the Locked state
@@ -113,7 +116,8 @@ namespace MAGTask
             // Save the level state
             m_levelService.OpenLevel(LevelModel.m_index);
 
-            // Particles
+            // Effects
+            m_audioService.PlaySFX(AudioIdentifiers.k_sfxMapUnlock);
             ParticleUtils.SpawnParticles(ParticleIdentifiers.k_starburst, MapNodeView.transform.position);
         }
 
@@ -126,8 +130,9 @@ namespace MAGTask
 
         private void OnPlayLevelRequested()
         {
-            // Start the level
-            m_levelService.PlayLevel(MapNodeView.LevelIndex);
+            // Request the level
+            m_audioService.PlaySFX(AudioIdentifiers.k_sfxButtonPositive);
+            m_levelService.RequestLevel(MapNodeView.LevelIndex);
         }
 
         /// End of the Idle state

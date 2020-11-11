@@ -37,9 +37,14 @@ namespace MAGTask
         public const string k_costSuccess = "CostSuccess";
         public const string k_costFail = "CostFail";
 
-        /// Level keys
+        /// Game keys (supposed to be localised)
         /// 
+        public const string k_mapExit = "Do you want to go back to the main menu?";
+        public const string k_mapLocked = "This level is not available just yet!";
+        public const string k_levelExit = "Do you want to go back to the level selection?";
         public const string k_levelDisplay = "Level {0}";
+        public const string k_levelWinBody = "Well done! Level {0} completed!";
+        public const string k_levelLostRetry = "Out of moves! Do you want to continue playing by adding {0} moves?";
 
         /// Objective keys
         /// 

@@ -21,6 +21,9 @@ namespace MAGTask
         [SerializeField]
         private TMP_Text m_scoreText = null;
 
+        private AudioService m_audioService = null;
+        private AudioSource m_loopedSFX = null;
+
         private Coroutine m_coroutine = null;
         private Tweener m_tweenCount = null;
         private List<int> m_scores = null;
@@ -33,6 +36,7 @@ namespace MAGTask
         {
             m_coroutine.Stop();
             m_tweenCount.Stop();
+            m_loopedSFX.SafeStop();
         }
 
         /// @param newScore
@@ -43,8 +47,10 @@ namespace MAGTask
         public void SetScore(int newScore, Action callback = null)
         {
             // Update the text
+            m_loopedSFX = m_audioService.PlaySFXLooped(AudioIdentifiers.k_loopScoreCounting);
             m_tweenCount = m_scoreText.DOCount(m_score, newScore, 1.0f, () =>
             {
+                m_loopedSFX.SafeStop();
                 m_score = newScore;
             });
 
@@ -57,6 +63,7 @@ namespace MAGTask
         /// 
         public void InitialiseScores(List<int> scores)
         {
+            m_audioService = GlobalDirector.Service<AudioService>();
             m_scoreText.SafeText(TextUtils.GetFormattedCurrencyString(m_score));
             m_scores = scores;
             foreach (var star in m_starsProgress)
@@ -90,6 +97,7 @@ namespace MAGTask
                         {
                             // The star is filled!
                             shouldContinue = true;
+                            m_audioService.PlaySFX(AudioIdentifiers.k_sfxStarburst);
                             ParticleUtils.SpawnParticles(ParticleIdentifiers.k_starburstUI, transform, m_starsProgress[index].transform.position);
                         }
                     });

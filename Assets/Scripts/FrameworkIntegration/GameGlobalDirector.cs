@@ -33,11 +33,6 @@ namespace MAGTask
             m_serviceSupplier.RegisterService<TimeService>();
             m_serviceSupplier.RegisterService<BankService>();
             m_serviceSupplier.RegisterService<LevelService>();
-            //m_serviceSupplier.RegisterService<GameTransactionService>();
-            //m_serviceSupplier.RegisterService<GameSettingsService>();
-            //m_serviceSupplier.RegisterService<RewardService>();
-            //m_serviceSupplier.RegisterService<TutorialService>();
-            //m_serviceSupplier.RegisterService<CeremonyService>();
 
             // Custom popups
             PopupService.PrefabPath = "Prefabs/PopupCanvas";
@@ -45,13 +40,9 @@ namespace MAGTask
             PopupService.QuestionID = PopupIdentifiers.k_gameQuestion;
 
             // Custom sounds for popups
-            //PopupView.s_sfxConfirmPressed = AudioIdentifiers.k_sfxButtonPositive;
+            PopupView.s_sfxConfirmPressed = AudioIdentifiers.k_sfxButtonPositive;
             PopupView.s_sfxBackPressed = AudioIdentifiers.k_sfxButtonBack;
-            //PopupView.s_sfxPresent = AudioIdentifiers.k_sfxPopupPresent;
-            //PopupView.s_sfxDismiss = AudioIdentifiers.k_sfxPopupDismiss;
-
-            // Starting currencies
-            //gameProgressService.AddStartCurrency(OverlayBankIdentifiers.k_currencyPremium, 500);
+            PopupView.s_sfxPresent = AudioIdentifiers.k_sfxPopupPresent;
 
             // Metadata
             m_metadataService = m_serviceSupplier.GetService<MetadataService>();

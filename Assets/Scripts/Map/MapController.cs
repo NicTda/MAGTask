@@ -54,7 +54,7 @@ namespace MAGTask
         {
             m_audioService.PlaySFX(AudioIdentifiers.k_sfxButtonBack);
             var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameQuestionProminent) as PopupYesNoView;
-            popupView.SetBodyText("Do you want to go back to the main menu?");
+            popupView.SetBodyText(GameTextIdentifiers.k_mapExit);
             popupView.OnPopupConfirmed += () =>
             {
                 base.OnBackButtonRequest();

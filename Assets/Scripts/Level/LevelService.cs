@@ -177,8 +177,9 @@ namespace MAGTask
         /// @param levelIndex
         ///     The index of the level to play
         /// 
-        public void PlayLevel(int levelIndex)
+        public void RequestLevel(int levelIndex)
         {
+            // TODO TDA: show the level Popup
             LevelLocalDirector.s_levelIndex = levelIndex;
             m_sceneService.SwitchToScene(SceneIdentifiers.k_level);
         }
