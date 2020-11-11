@@ -11,6 +11,7 @@ namespace MAGTask
     /// 
     public sealed class LevelLocalDirector : LocalDirector
     {
+        public static string s_sceneExit = string.Empty;
         public static int s_levelIndex = -1;
 
         [SerializeField]
@@ -37,7 +38,12 @@ namespace MAGTask
             }
 
             // Create the level controller
-            new LevelController(this, m_view);
+            var levelController = new LevelController(this, m_view);
+            if(s_sceneExit != string.Empty)
+            {
+                levelController.SetExitScene(s_sceneExit);
+                s_sceneExit = string.Empty;
+            }
         }
         #endregion
     }

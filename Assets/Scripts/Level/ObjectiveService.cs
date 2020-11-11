@@ -74,7 +74,7 @@ namespace MAGTask
         /// @param amount
         ///     The progressed amount for that objective
         /// 
-        public void LogEvent(ObjectiveType type, string target, int amount = 1)
+        public void LogEvent(ObjectiveType type, TileColour target, int amount = 1)
         {
             foreach (var objective in m_objectives)
             {

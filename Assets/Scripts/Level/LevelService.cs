@@ -4,6 +4,7 @@
 
 using CoreFramework;
 using CoreFramework.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -176,11 +177,16 @@ namespace MAGTask
 
         /// @param levelIndex
         ///     The index of the level to play
+        /// @param callback
+        ///     The function to call if the level is starting
         /// 
-        public void RequestLevel(int levelIndex)
+        public void RequestLevel(int levelIndex, Action callback = null)
         {
-            // TODO TDA: show the level Popup
             LevelLocalDirector.s_levelIndex = levelIndex;
+
+            // TODO TDA: show the level Popup
+            callback.SafeInvoke();
+
             m_sceneService.SwitchToScene(SceneIdentifiers.k_level);
         }
         #endregion

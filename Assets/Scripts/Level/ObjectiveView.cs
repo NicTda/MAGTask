@@ -47,11 +47,7 @@ namespace MAGTask
         private void UpdateProgressDisplay()
         {
             // Set the objective text
-            string target = m_objectiveModel.m_data.m_target;
-            if(target == string.Empty)
-            {
-                target = m_objectiveModel.m_data.m_value.ToString();
-            }
+            string target = m_objectiveModel.m_data.m_target != TileColour.None ? m_objectiveModel.m_data.m_target.ToString() : m_objectiveModel.m_data.m_value.ToString();
             string amount = TextUtils.GetFormattedCurrencyString(m_objectiveModel.m_data.m_amount);
             m_objectiveText.SafeText(string.Format(m_baseDisplay, target, amount));
 

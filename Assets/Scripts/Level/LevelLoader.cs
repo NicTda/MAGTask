@@ -3,6 +3,10 @@
 //
 
 using CoreFramework;
+using CoreFramework.Json;
+using System.IO;
+using UnityEditor;
+using UnityEngine;
 
 namespace MAGTask
 {
@@ -11,6 +15,7 @@ namespace MAGTask
     public sealed class LevelDataLoader : MetadataLoader<LevelData>
     {
         private const string k_jsonMetadataFolderPath = "Metadata/Levels";
+        private const string k_savePath = "{0}/Resources/{1}/{2}.json";
         private const string k_levelFormat = "Level{0}";
 
         #region MetadataLoader functions
@@ -32,6 +37,36 @@ namespace MAGTask
         public LevelData GetLevel(int index)
         {
             return GetItem(string.Format(k_levelFormat, index));
+        }
+
+        /// @param index
+        ///     The index of the level to get
+        ///     
+        /// @return The level data for that index, or null
+        /// 
+        public void SaveLevelData(LevelData levelData)
+        {
+            // Delete the level from the loader
+            RemoveItem(levelData.m_id);
+
+            // Save the level data on disk
+            string levelID = string.Format(k_levelFormat, levelData.m_index);
+            var filePath = string.Format(k_savePath, Application.dataPath, k_jsonMetadataFolderPath, levelID);
+            var dataToWrite = levelData.SerializeToString();
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            {
+                using (StreamWriter writer = new StreamWriter(fs))
+                {
+                    writer.Write(dataToWrite);
+                }
+            }
+
+#if UNITY_EDITOR
+            UnityEditor.AssetDatabase.Refresh();
+#endif
+
+            // Add the level data to the loader
+            AddItem(levelData);
         }
         #endregion
     }

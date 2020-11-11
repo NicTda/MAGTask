@@ -136,15 +136,26 @@ namespace MAGTask
             SetMovesLeft(m_levelData.m_moves);
 
             // Initialise the objectives
+            bool hasScore = false;
             for (int index = 0; index < m_levelData.m_objectives.Count; ++index)
             {
                 var objectiveData = m_levelData.m_objectives[index];
                 RegisterObjective(objectiveData, index);
+                hasScore |= objectiveData.m_type == ObjectiveType.Score;
             }
 
-            // Add a score objective as a default
-            RegisterObjective(new ObjectiveData(ObjectiveType.Score, m_levelData.m_scores.GetFirst()), m_levelData.m_objectives.Count);
-            m_fsm.ExecuteAction(k_actionNext);
+            if(hasScore == false)
+            {
+                // Add a score objective as a default
+                RegisterObjective(new ObjectiveData()
+                {
+                    m_type = ObjectiveType.Score,
+                    m_amount = m_levelData.m_scores.GetFirst()
+
+                }, m_levelData.m_objectives.Count);
+
+                m_fsm.ExecuteAction(k_actionNext);
+            }
         }
         
         /// Start of the Load state
@@ -369,7 +380,7 @@ namespace MAGTask
                     ++tilePopped;
 
                     // Log the popped tile event
-                    m_objectiveService.LogEvent(ObjectiveType.Colour, tile.m_tileColour.ToString());
+                    m_objectiveService.LogEvent(ObjectiveType.Colour, tile.m_tileColour);
                 });
 
                 yield return new WaitForSeconds(0.1f);
@@ -468,8 +479,8 @@ namespace MAGTask
             popupView.SetBodyText(GameTextIdentifiers.k_levelWinBody, m_levelData.m_index);
             popupView.OnPopupDismissed += (popup) =>
             {
-                // TODO TDA: home, retry, next
-                m_sceneService.SwitchToScene(SceneIdentifiers.k_map);
+                // TODO TDA: popup with home, retry, next
+                m_sceneService.SwitchToScene(m_exitSceneID);
             };
         }
 
@@ -593,9 +604,12 @@ namespace MAGTask
         /// 
         private void RegisterObjective(ObjectiveData objectiveData, int index)
         {
-            var model = m_objectiveService.AddObjective(objectiveData);
-            model.OnCompleted += OnObjectiveCompleted;
-            m_view.ShowObjective(index, model);
+            if(objectiveData.m_type != ObjectiveType.None)
+            {
+                var model = m_objectiveService.AddObjective(objectiveData);
+                model.OnCompleted += OnObjectiveCompleted;
+                m_view.ShowObjective(index, model);
+            }
         }
 
         /// Called when an objective completed
