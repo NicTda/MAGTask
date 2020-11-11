@@ -5,7 +5,6 @@
 using CoreFramework;
 using CoreFramework.Json;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 namespace MAGTask
@@ -46,9 +45,6 @@ namespace MAGTask
         /// 
         public void SaveLevelData(LevelData levelData)
         {
-            // Delete the level from the loader
-            RemoveItem(levelData.m_id);
-
             // Save the level data on disk
             string levelID = string.Format(k_levelFormat, levelData.m_index);
             var filePath = string.Format(k_savePath, Application.dataPath, k_jsonMetadataFolderPath, levelID);
@@ -64,9 +60,6 @@ namespace MAGTask
 #if UNITY_EDITOR
             UnityEditor.AssetDatabase.Refresh();
 #endif
-
-            // Add the level data to the loader
-            AddItem(levelData);
         }
         #endregion
     }

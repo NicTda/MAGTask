@@ -28,6 +28,7 @@ namespace MAGTask
         private const int k_boardMin = 3;
         private const int k_boardMax = 9;
 
+        private static LevelData s_cachedLevel = null;
         private static LevelData s_levelData = null;
         private static bool s_unsavedChanged = false;
 
@@ -217,10 +218,9 @@ namespace MAGTask
             m_audioService.PlaySFX(AudioIdentifiers.k_sfxButtonPositive);
 
             // Choose level to test from the data
-            m_levelService.RequestLevel(m_view.LevelIndex, () =>
-            {
-                LevelLocalDirector.s_sceneExit = SceneIdentifiers.k_levelEditor;
-            });
+            LevelLocalDirector.s_levelData = s_levelData;
+            LevelLocalDirector.s_sceneExit = SceneIdentifiers.k_levelEditor;
+            m_sceneService.SwitchToScene(SceneIdentifiers.k_level);
         }
 
         /// Called when the player presses the Previous button
@@ -258,9 +258,13 @@ namespace MAGTask
             {
                 // Popup to confirm loading
                 var popupView = m_popupService.QueuePopup(PopupIdentifiers.k_gameQuestion) as PopupYesNoView;
-                popupView.SetBodyText("You have unsaved changed for level {0}. Do you want to discard them and load Level {1}?", s_levelData.m_index, m_view.LevelIndex);
+                popupView.SetBodyText("You have unsaved changed for level {0}. Do you want to discard them and load Level {1}?", s_levelData.m_index, levelIndex);
                 popupView.OnPopupConfirmed += () =>
                 {
+                    // Retrieve cached level
+                    s_levelData = s_cachedLevel;
+                    s_cachedLevel = null;
+
                     // Load the level data
                     LoadLevel(levelIndex);
                 };
@@ -352,17 +356,18 @@ namespace MAGTask
         {
             // Load the level data
             s_unsavedChanged = false;
-            s_levelData = m_levelLoader.GetLevel(levelIndex).Clone();
+            var levelData = m_levelLoader.GetLevel(levelIndex);
 
             // If there is no such level, create it
-            if (s_levelData == null)
+            if (levelData == null)
             {
-                s_levelData = new LevelData()
+                levelData = new LevelData()
                 {
                     m_id = LevelData.k_levelPrefix + levelIndex,
                     m_index = levelIndex
                 };
             }
+            s_levelData = levelData.Clone();
 
             // Reload the screen
             m_fsm.ExecuteAction(k_actionLoad);

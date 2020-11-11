@@ -124,7 +124,7 @@ namespace MAGTask
         /// 
         private void EnterStateInit()
         {
-            m_levelData = m_levelService.GetLevelData(LevelLocalDirector.s_levelIndex);
+            m_levelData = LevelLocalDirector.s_levelData;
             m_view.ScoreView.InitialiseScores(m_levelData.m_scores);
             m_view.BoardBacking.size = new Vector2(m_levelData.m_width + k_boardPadding, m_levelData.m_height + k_boardPadding);
             m_view.SetLevelName(string.Format(GameTextIdentifiers.k_levelDisplay, m_levelData.m_index));

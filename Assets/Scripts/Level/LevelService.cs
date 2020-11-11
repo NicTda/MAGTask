@@ -182,7 +182,7 @@ namespace MAGTask
         /// 
         public void RequestLevel(int levelIndex, Action callback = null)
         {
-            LevelLocalDirector.s_levelIndex = levelIndex;
+            LevelLocalDirector.s_levelData = m_levelLoader.GetLevel(levelIndex);
 
             // TODO TDA: show the level Popup
             callback.SafeInvoke();
