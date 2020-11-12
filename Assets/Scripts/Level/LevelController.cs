@@ -496,7 +496,7 @@ namespace MAGTask
             popupView.OnPopupDismissed += (popup) =>
             {
                 // TODO TDA: popup with home, retry, next
-                m_sceneService.SwitchToScene(m_exitSceneID);
+                m_sceneService.SwitchToScene(m_exitSceneID, SceneIdentifiers.k_transition);
             };
         }
 

@@ -58,7 +58,7 @@ namespace MAGTask
         private void OnPlayRequested()
         {
             m_audioService.PlaySFX(AudioIdentifiers.k_sfxButtonPositive);
-            m_sceneService.SwitchToScene(SceneIdentifiers.k_map);
+            m_sceneService.SwitchToScene(SceneIdentifiers.k_map, SceneIdentifiers.k_transition);
         }
 
         /// End of the Idle state

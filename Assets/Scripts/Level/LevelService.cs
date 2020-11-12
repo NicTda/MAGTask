@@ -187,7 +187,7 @@ namespace MAGTask
             // TODO TDA: show the level Popup
             callback.SafeInvoke();
 
-            m_sceneService.SwitchToScene(SceneIdentifiers.k_level);
+            m_sceneService.SwitchToScene(SceneIdentifiers.k_level, SceneIdentifiers.k_transition);
         }
         #endregion
     }

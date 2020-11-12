@@ -4,15 +4,15 @@ This is the code test for the interview process at **MAG**.
 
 # Content
 - Main menu, level selection (map) menu, match-3 linker with 5 tile colours
+- 8 levels to play
 - Objective based levels
--- At a bare minimum, score X points (first star) 
--- Pop X tiles of a given colour
--- Make a chain of a certain amount of tiles, X times
+  - At a bare minimum, score X points (first star) 
+  - Pop X tiles of a given colour
+  - Make a chain of a certain amount of tiles, X times
 - A penalty Grey tile that removes score
 
 # Level Editor
-
-- Very limited and version specific UI editor
+Very limited and version specific UI editor
 > Open the "Level_Editor" scene, then run
 - Allows the creation of new levels
 - Allows the modification of existing levels
@@ -26,12 +26,11 @@ This is the code test for the interview process at **MAG**.
 - Very occasionally, some tiles don't move down
 
 # What's missing?
-- Well, A LOT, but here's what I planned to have and didn't add in the end
+Well, A LOT, but here's what I planned to have and didn't add in the end
 - Popups for the start of a level (showing the objectives, and player highscore if previously completed)
 - Proper level complete popup with ceremony
 - Toast messages when reshuffling the board, or making long chains
 - Show a possible chain if the player is inactive for a while
 - Feedback on the map nodes
-- Transition between scenes
 - Bonus round when level is completed and the player has extra moves
 - ...and more
